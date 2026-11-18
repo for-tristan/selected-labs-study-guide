@@ -234,7 +234,7 @@ class teacher2{ // this is a class that represents a teacher2
 
 
 
-class Main { 
+class part1 { 
 
 public static void main(String[] args) {
 
