@@ -12,5 +12,13 @@ OOP in java is built around
 - polymorphism
 - abstraction
 
+---
 
-## classes 
+### Classes 
+
+is a blueprint of an object more like a general information about that object and a description about it, it also describes what an object should contain 
+
+--- 
+
+### Objects
+
