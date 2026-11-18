@@ -11,7 +11,12 @@ interface schoolsignup{
 
 }
 
-class signin implements schoolsignup{
+interface schoolday{
+
+
+}
+
+class signin implements schoolsignup ,schoolday{
 
 public void name(){
 

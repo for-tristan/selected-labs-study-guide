@@ -134,8 +134,8 @@ In Java, polymorphism allows the same method name or reference type to work with
 
 There are two main types:
 
-- Method Overloading
-- Method Overriding
+- Method Overloading (compile-time)
+- Method Overriding (runtime)
 
 ### 6.1 Method Overloading
 
@@ -281,3 +281,62 @@ A class uses the `implements` keyword to implement an interface and provide impl
 ---
 
 **Reference:** `part1.java` contains the practical code examples used to understand these OOP concepts.
+
+
+# SOLID Principles
+
+
+### 1. What are Solid principles
+
+SOLID is a collection of five principles used to create better object-oriented software.
+
+it makes the code 
+
+- easier to understand 
+- easier to maintain
+- easier to extend 
+- more reusable
+- less dependant on specific classes
+
+###  S - Single Responsibility
+### O - Open/Closed
+### L - Liskov Substitution
+### I - Interface Segregation
+### D - Dependency Inversion
+---
+
+
+### Single Responsibility Principle
+
+A class should have only one responsibility and one reason to change
+which doesnt mean a class cant have multiple methods but it should belong to the same responsibility.
+
+
+### Open/Closed Principle
+
+Software entities should be open for extension but closed for modification.
+
+open for extension where We can add new functionalities 
+closed for modifications where we shouldnt need to keep changing the existing working code
+
+
+
+### Liskov Substitution 
+
+is when a parent class should be replaceable with objects of its own child class without breaking the behavior 
+
+meaning that A child class should behave correctly wherever its parent class is expected.
+
+
+### Interface Segregation Principle
+
+Classes should not be forced to depend on methods they dont use 
+
+meaning that creating one huge interface containing many methods is a bad design create smaller ones instead 
+
+
+### Dependency Inversion Principle
+
+high level modules should not depend on low level modules both should depend on abstractions 
+
+
