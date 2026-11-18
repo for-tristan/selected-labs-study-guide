@@ -1,9 +1,85 @@
 package com.example;
 
 
+interface schoolsignup{
+
+    void name();
+    void age();
+    void number();
+    void grade();
+    
+
+}
+
+class signin implements schoolsignup{
+
+public void name(){
+
+
+}
+
+public void age(){
+
+
+}
+
+public void number(){
+
+
+}
+
+public void grade(){
+
+
+}
+
+
+}
+
+abstract class janitor { // this is an abstract class that represents a school
+
+
+    abstract void dirty(); // this is an abstract method that explains what the student (object) should preform
+
+
+        void clean(){
+
+            System.out.println(" the janitor1 cleans the classes ");
+
+        }
+
+        
+}
+
+    class mess extends janitor {
+
+
+        @Override
+        void dirty(){
+            System.out.println(" the mess makes the hallways dirty ");
+        }
+
+
+}
+
+class dirt extends janitor{
+
+@Override 
+
+void dirty(){
+
+    System.out.println("the dirt makes the hallways dirty");
+}
+
+}
+
+
+
+
 class person { // this is a class that represents a person
-    String name; // this person has a name
-    int age; // this person has an age
+        String name;
+        int age;
+
 
     person(){ // this is the constructor of the class person Default/no-argument constructor
 
@@ -14,6 +90,8 @@ class person { // this is a class that represents a person
 }
 
 class student extends person { // this is a class that represents a student 
+
+
 
     public String grade; // this student has a Public grade
 
@@ -101,9 +179,9 @@ class student extends person { // this is a class that represents a student
 
         secondgrade(String n , int a, String g){ // this is the constructor of the class secondgrade Parameterized constructor
 
-            age = a;  // this is the age of the student
-            name = n; // this is the name of the student
-            grade = g; // this is the grade of the student
+            name = n;
+            age = a;
+            grade = g;
 
     }
 
@@ -227,6 +305,13 @@ public static void main(String[] args) {
 
 
         student.grade(13, 14, 15, 16, 17); // call the fourth static method grade() from the class student without creating an object of the class student
+
+        mess mess = new mess();
+        dirt dirt = new dirt();
+        mess.clean();
+        mess.dirty();
+        dirt.dirty();
+
 
 
     }   

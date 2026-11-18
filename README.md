@@ -178,4 +178,43 @@ An instance initialization block executes whenever an object is created.
 
 
 
+---
+
+
+### Abstraction
+
+Abstraction means hiding unnecessary implementation details and showing only the essential functionality to the user.
+
+- abstract class is created using ``abstract`` keyword.
+
+
+Important abstract class rules
+- Cannot create an object directly from it.
+- Can contain abstract methods.
+- Can contain normal methods.
+- Can contain constructors.
+- Can contain variables and fields.
+- A concrete child class must implement all inherited abstract methods.
+
+### When should you use abstraction?
+According to your lecture:
+- When you cannot provide implementation for all methods in a base class.
+- When you want child classes to provide their own implementations.
+- When you want to hide unnecessary implementation details.
+
+
+### Interfaces
+
+An interface is a contract that defines capabilities a class must provide.
+
+
+Feature                 	Abstract Class      	            Interface
+Keyword                 	abstract class      	            interface
+Inheritance                 keyword	extends     	            implements
+Object creation            	Not directly possible           	Not directly possible
+Constructors            	Yes                              	No
+Normal methods          	Yes                               	Yes, using permitted method types
+Abstract methods        	Yes                 	            Yes
+Instance variables      	Yes                             	No; interface fields are constants
+Multiple inheritance    	A class extends only one class	    A class can implement multiple interfaces
 
