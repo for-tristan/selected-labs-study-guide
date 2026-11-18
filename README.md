@@ -75,3 +75,23 @@ Constructor rules
 ---
 
 ### Inheritance
+
+Inheritance allows one class to acquire the properties and methods of another class.
+
+Term        |	 Meaning
+Superclass  |	 Parent class
+Subclass    |    Child class
+extends	    |    Keyword used for class inheritance
+IS-A        |  	 Relationship between parent and child
+
+## Access modifiers in inheritance
+
+Java has 4 access levels 
+
+1. Private Accessible only inside the class where it is declared.
+
+2. Public Accessible from anywhere, subject to normal Java visibility rules.
+
+3. Protected Accessible inside the same package and through inheritance outside the package.
+
+4. Default Accessible inside the same package. No modifier is written.
