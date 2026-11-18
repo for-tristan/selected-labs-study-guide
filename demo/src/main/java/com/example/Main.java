@@ -2,23 +2,59 @@ package com.example;
 
 
 
-
-
 class student { // this is a class that represents a student 
     String name; // this student has a name
     int age; // this student has an age
 
-  public static String studying() { // this is a static method that explains what the student (class) should preform
-    return "All students are studying"; 
-}
-
 
     void study() { // this is a method that explains what the student (object) should preform
-        System.out.println("all are studying"); // this is the action that the student (object) should preform
+        System.out.println("All students are studying"); // this is the action that the student (object) should preform
             
 
     }
+
+
+    }
+
+
+    class teacher1{ // this is a class that represents a teacher1
+    String name; // this teacher has a name
+    int age; // this teacher has an age
+
+    teacher1(){ // this is the constructor of the class teacher1 Default/no-argument constructor
+
+        age = 36;  // this is the default age of the teacher
+        name = "Mr. Smith"; // this is the default name of the teacher
+    }
+
+
+    public static String smith(){
+
+        return "Mr. Smith is teaching"; // this is the default name of the teacher
+
+
+    }
+
 }
+
+
+
+class teacher2{ // this is a class that represents a teacher2
+    String name; // this teacher has a name
+    int age; // this teacher has an age
+
+    teacher2(String n , int a){ // this is the constructor of the class teacher2 Parameterized constructor
+
+        age = a;  // this is the age of the teacher
+        name = n; // this is the name of the teacher
+
+
+    }
+
+    }
+
+
+
 class Main { 
 
 public static void main(String[] args) {
@@ -52,9 +88,19 @@ public static void main(String[] args) {
     System.out.println("Student Name: " + student3.name); // print the name of the student
     System.out.println("Student Age: " + student3.age); // print the age of the student
 
-    System.out.println(student.studying()); // call the static method studying() from the class student
-
     studying.study(); // call the method study() from the object studying
+
+        teacher1.smith(); // call the static method smith() from the class teacher1
+        teacher1 teacher1 = new teacher1(); // this is the object that we are gonna create using the class (blueprint) to call the method Smith() from the class teacher1
+        System.out.println(teacher1.age); // print the age of the teacher
+        System.out.println(teacher1.name); // print the name of the teacher
+        System.out.println(teacher1.smith()); // print the return value of the static method smith() from the class teacher1
+
+
+        teacher2 teacher2 = new teacher2("Ms. Williams", 35); // this is the object that we are gonna create using the class (blueprint) to call the method Smith() from the class teacher2
+
+        System.out.println(teacher2.age); // print the age of the teacher
+        System.out.println(teacher2.name); // print the name of the teacher
 
     }   
 

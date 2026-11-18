@@ -54,3 +54,24 @@ See example in Main.java
 ---
 
 ### Constructors
+
+A constructor is a special method used to initialize an object when it is created inside the Class
+
+theres 2 types 
+
+- Default/no-argument constructor
+
+- Parameterized constructor
+
+
+
+Constructor rules
+1. The constructor name must be identical to the class name.
+2. It has no return type, not even void.
+3. It executes automatically when an object is created.
+4. It can accept parameters.
+5. Constructors can be overloaded.
+
+---
+
+### Inheritance
