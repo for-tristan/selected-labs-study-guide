@@ -1,11 +1,31 @@
 package com.example;
 
 
+class person { // this is a class that represents a person
+    String name; // this person has a name
+    int age; // this person has an age
 
-class student { // this is a class that represents a student 
-    String name; // this student has a name
-    int age; // this student has an age
+    person(){ // this is the constructor of the class person Default/no-argument constructor
+
+      System.out.println("this is a person");
+
+
+    }
+}
+
+class student extends person { // this is a class that represents a student 
+
     public String grade; // this student has a Public grade
+
+
+    {
+        System.out.println("this is a student");
+    }
+
+    static {
+
+        System.out.println("This is a static block that will be executed when the class is loaded"); // this is a static block that will be executed when the class is loaded
+    }
 
     void study() { // this is a method that explains what the student (object) should preform
         System.out.println("All students are studying"); // this is the action that the student (object) should preform
@@ -38,6 +58,21 @@ class student { // this is a class that represents a student
         return math + science + english + AP; // this is the action that the student (object) should preform
 
     }
+
+    static int grade(int math , int science, int english, int AP, int history){ // this is the fourth method that explains what the student (object) should preform
+
+        return math + science + english + AP + history; // this is the action that the student (object) should preform
+
+    }
+
+
+    student(){
+
+        super();
+        System.out.println("this is a school");
+
+    }
+
 }
 
 
@@ -78,6 +113,8 @@ class student { // this is a class that represents a student
             
 
     }
+
+
 
 }
 
@@ -187,6 +224,9 @@ public static void main(String[] args) {
         System.out.println(grade.grade(90, 80)); // call the first method grade() from the object grade
         System.out.println(grade.grade(90, 80, 70)); // call the second method grade() from the object grade
         System.out.println(grade.grade(90.33, 80.11, 70.32, 60.23)); // call the third
+
+
+        student.grade(13, 14, 15, 16, 17); // call the fourth static method grade() from the class student without creating an object of the class student
 
 
     }   

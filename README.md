@@ -130,7 +130,7 @@ method overloading is creating multiple methods with the same name but different
 
 > see Main.java
 
----
+
 
 ### 2. Method Overriding
 
@@ -139,10 +139,43 @@ Method overriding happens when a child class provides its own implementation of 
 > see Main.java
 
 
----
+
 
 ### Polymorphic referencing
 
 You can call methods available through the reference, and the overridden instance method is called.
 
 ---
+
+
+
+### Static Methods and Static Blocks
+
+### 1. Static methods 
+
+the static methods belongs to the class and its not an object 
+
+- static methods can directly access static members
+
+- They cannot directly access instance members.
+
+- they cannot use ``` super```
+
+- they cannot use ``` this``` which refers to an object meanwhile static methods belong to the class itself
+
+
+### 2. Static Initialization Block
+
+A static block initializes static data.
+
+The static block executes when the class is initialized, before the main method in this example.
+
+
+### 3. Instance Initialization Block (IIB)
+
+
+An instance initialization block executes whenever an object is created.
+
+
+
+
