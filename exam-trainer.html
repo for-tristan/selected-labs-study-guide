@@ -1,0 +1,1945 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SE Exam Trainer — OOP · SOLID · Design Patterns</title>
+<style>
+:root{
+  --bg:#eef1f7; --card:#ffffff; --ink:#1e293b; --muted:#64748b;
+  --accent:#4f46e5; --accent-soft:#eef2ff; --line:#e2e8f0;
+  --ok:#16a34a; --ok-soft:#f0fdf4; --bad:#dc2626; --bad-soft:#fef2f2;
+  --code-bg:#0f172a; --code-ink:#e2e8f0; --warn:#b45309;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:'Segoe UI',system-ui,-apple-system,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.55}
+header{background:linear-gradient(135deg,#1e1b4b 0%,#4338ca 60%,#6366f1 100%);color:#fff;padding:28px 20px 22px;text-align:center}
+header h1{margin:0 0 6px;font-size:26px;letter-spacing:.3px}
+header p{margin:0;opacity:.85;font-size:14px}
+.wrap{max-width:980px;margin:0 auto;padding:0 16px 60px}
+.tabs{display:flex;gap:8px;justify-content:center;margin:-18px auto 18px;max-width:980px;padding:0 16px;flex-wrap:wrap}
+.tab-btn{border:1px solid var(--line);background:#fff;color:var(--ink);padding:10px 22px;border-radius:999px;font-size:15px;font-weight:600;cursor:pointer;box-shadow:0 2px 8px rgba(15,23,42,.08)}
+.tab-btn.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.view{display:none}
+.view.active{display:block}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:16px;box-shadow:0 1px 4px rgba(15,23,42,.05)}
+.controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.chip{border:1px solid var(--line);background:#fff;border-radius:999px;padding:6px 13px;font-size:13px;font-weight:600;cursor:pointer;color:var(--ink)}
+.chip.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.chip .n{opacity:.75;font-weight:400;margin-left:4px}
+input[type=text],select,input[type=number]{border:1px solid var(--line);border-radius:8px;padding:8px 12px;font-size:14px;background:#fff;color:var(--ink)}
+input[type=text]:focus{outline:2px solid var(--accent-soft);border-color:var(--accent)}
+.btn{border:none;border-radius:9px;padding:9px 16px;font-size:14px;font-weight:600;cursor:pointer;background:var(--accent);color:#fff}
+.btn.ghost{background:#fff;color:var(--accent);border:1px solid var(--accent)}
+.btn.gray{background:#f1f5f9;color:var(--ink);border:1px solid var(--line)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.stats{display:flex;flex-wrap:wrap;gap:14px;align-items:center;margin-top:12px;font-size:14px;color:var(--muted)}
+.stats b{color:var(--ink)}
+.progress{flex:1;min-width:160px;height:9px;background:#e2e8f0;border-radius:99px;overflow:hidden}
+.progress>div{height:100%;background:linear-gradient(90deg,#22c55e,#16a34a);width:0%;transition:width .3s}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;margin-bottom:14px;box-shadow:0 1px 4px rgba(15,23,42,.05)}
+.card-top{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:9px}
+.badge{font-size:11.5px;font-weight:700;padding:3px 10px;border-radius:999px;letter-spacing:.3px}
+.badge.cat{background:var(--accent-soft);color:var(--accent)}
+.badge.type{background:#f1f5f9;color:var(--muted)}
+.badge.res-ok{background:var(--ok-soft);color:var(--ok)}
+.badge.res-bad{background:var(--bad-soft);color:var(--bad)}
+.badge.res-rev{background:#fffbeb;color:var(--warn)}
+.qnum{margin-left:auto;font-size:12.5px;color:var(--muted);font-weight:600}
+.qtext{font-size:15.5px;font-weight:600;white-space:pre-wrap}
+pre.code{background:var(--code-bg);color:var(--code-ink);padding:13px 15px;border-radius:10px;overflow-x:auto;font-family:'Consolas','Courier New',monospace;font-size:12.8px;line-height:1.5;margin:10px 0;white-space:pre}
+.opts{display:flex;flex-direction:column;gap:7px;margin-top:12px}
+.opt{display:flex;gap:10px;align-items:flex-start;text-align:left;width:100%;border:1.5px solid var(--line);background:#fff;border-radius:10px;padding:10px 13px;font-size:14.5px;cursor:pointer;color:var(--ink);font-family:inherit}
+.opt:hover:not(:disabled){border-color:var(--accent);background:var(--accent-soft)}
+.opt:disabled{cursor:default}
+.opt .letter{flex:0 0 auto;width:24px;height:24px;border-radius:6px;background:#f1f5f9;color:var(--muted);display:flex;align-items:center;justify-content:center;font-size:12.5px;font-weight:700}
+.opt.correct{border-color:var(--ok);background:var(--ok-soft)}
+.opt.correct .letter{background:var(--ok);color:#fff}
+.opt.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.opt.wrong .letter{background:var(--bad);color:#fff}
+.opt.chosen{box-shadow:0 0 0 2px var(--accent) inset}
+.explain{margin-top:11px;background:#f8fafc;border-left:4px solid var(--accent);padding:10px 14px;border-radius:0 8px 8px 0;font-size:14px;color:#334155}
+.explain b{color:var(--accent)}
+.explain.ok{border-left-color:var(--ok)}
+.explain.bad{border-left-color:var(--bad)}
+.reveal-btn{background:none;border:none;color:var(--accent);font-size:13px;font-weight:600;cursor:pointer;padding:8px 0 0;text-decoration:underline}
+.card.locked{opacity:.92}
+/* exam */
+.exam-top{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.timer{font-size:20px;font-weight:800;font-variant-numeric:tabular-nums;color:var(--ink)}
+.timer.low{color:var(--bad)}
+.palette{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0}
+.pal{width:34px;height:34px;border-radius:8px;border:1.5px solid var(--line);background:#fff;font-size:12.5px;font-weight:700;cursor:pointer;color:var(--muted)}
+.pal.done{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.pal.cur{background:var(--accent);border-color:var(--accent);color:#fff}
+.result-score{text-align:center;padding:12px 0 4px}
+.result-score .big{font-size:52px;font-weight:800;color:var(--accent);line-height:1.1}
+.result-score .sub{color:var(--muted);font-size:15px}
+/* study guide */
+.sg h2{margin:4px 0 10px;font-size:20px;color:var(--accent)}
+.sg details{border:1px solid var(--line);border-radius:12px;background:#fff;margin-bottom:12px;overflow:hidden}
+.sg summary{cursor:pointer;padding:14px 18px;font-weight:700;font-size:15.5px;background:#f8fafc;list-style:none;display:flex;gap:10px;align-items:center}
+.sg summary::-webkit-details-marker{display:none}
+.sg summary::before{content:'▸';color:var(--accent);font-size:18px;transition:transform .2s}
+.sg details[open] summary::before{transform:rotate(90deg)}
+.sg .inner{padding:6px 20px 18px;font-size:14.5px}
+.sg h3{font-size:15.5px;margin:18px 0 8px;color:#0f172a}
+.sg p{margin:8px 0}
+.sg ul,.sg ol{margin:8px 0;padding-left:22px}
+.sg li{margin:5px 0}
+.sg table{border-collapse:collapse;width:100%;margin:10px 0;font-size:13.8px}
+.sg th,.sg td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+.sg th{background:var(--accent-soft);color:var(--accent)}
+.sg code{background:#f1f5f9;border-radius:5px;padding:1px 6px;font-family:'Consolas',monospace;font-size:13px;color:#0f172a}
+.sg pre.code{margin:10px 0}
+.tip{background:#fffbeb;border:1px solid #fde68a;border-radius:10px;padding:12px 16px;margin:12px 0;font-size:14px}
+.tip b{color:var(--warn)}
+footer{text-align:center;color:var(--muted);font-size:12.5px;padding:20px 0 6px}
+@media (max-width:640px){ header h1{font-size:21px} .qtext{font-size:14.5px} }
+</style>
+</head>
+<body>
+<header>
+  <h1>Software Engineering Exam Trainer</h1>
+  <p>OOP Revision &bull; SOLID Principles &bull; Design Patterns (Singleton &amp; Factory) — built from your Lectures, Sections, Quiz 1 and Question Bank</p>
+</header>
+
+<div class="tabs">
+  <button class="tab-btn active" id="tab-practice" onclick="switchTab('practice')">Practice Questions</button>
+  <button class="tab-btn" id="tab-exam" onclick="switchTab('exam')">Mock Exam</button>
+  <button class="tab-btn" id="tab-guide" onclick="switchTab('guide')">Study Guide</button>
+</div>
+
+<div class="wrap">
+
+<!-- ================= PRACTICE ================= -->
+<section class="view active" id="view-practice">
+  <div class="panel">
+    <div class="controls">
+      <input type="text" id="search" placeholder="Search questions..." oninput="onSearch(this.value)" style="flex:1;min-width:170px">
+      <select id="typeFilter" onchange="onType(this.value)">
+        <option value="all">All types</option>
+        <option value="mcq">Multiple choice</option>
+        <option value="tf">True / False</option>
+      </select>
+      <select id="statusFilter" onchange="onStatus(this.value)">
+        <option value="all">All status</option>
+        <option value="unanswered">Unanswered</option>
+        <option value="wrong">Answered wrong</option>
+        <option value="correct">Answered correct</option>
+      </select>
+      <button class="btn ghost" onclick="toggleShuffle()" id="shuffleBtn">Shuffle: Off</button>
+      <button class="btn gray" onclick="resetProgress()">Reset progress</button>
+    </div>
+    <div class="controls" id="catChips" style="margin-top:12px"></div>
+    <div class="stats">
+      <span>Showing <b id="stShown">0</b></span>
+      <span>Answered <b id="stAnswered">0</b></span>
+      <span>Correct <b id="stCorrect" style="color:var(--ok)">0</b></span>
+      <span>Accuracy <b id="stAcc">0%</b></span>
+      <div class="progress"><div id="progBar"></div></div>
+    </div>
+  </div>
+  <div id="qList"></div>
+</section>
+
+<!-- ================= EXAM ================= -->
+<section class="view" id="view-exam">
+  <div class="panel" id="examSetup">
+    <h2 style="margin:2px 0 12px;font-size:19px;color:var(--accent)">Mock Exam Setup</h2>
+    <p style="margin:0 0 14px;color:var(--muted);font-size:14px">Simulates your Moodle quiz: no feedback while answering, timer counting down, score at the end.</p>
+    <div class="controls">
+      <label style="font-size:14px;font-weight:600">Questions:
+        <select id="examCount" style="margin-left:6px">
+          <option value="10">10</option>
+          <option value="20" selected>20</option>
+          <option value="40">40</option>
+          <option value="0">All</option>
+        </select>
+      </label>
+      <label style="font-size:14px;font-weight:600">Scope:
+        <select id="examScope" style="margin-left:6px">
+          <option value="all">All topics</option>
+          <option value="oop">OOP + Quiz 1</option>
+          <option value="solid">SOLID (all)</option>
+          <option value="patterns">Design Patterns (Singleton + Factory + general)</option>
+        </select>
+      </label>
+      <label style="font-size:14px;font-weight:600">Minutes: <input type="number" id="examMinutes" value="25" min="1" max="240" style="width:70px;margin-left:6px"></label>
+      <button class="btn" onclick="startExam()">Start exam</button>
+    </div>
+  </div>
+  <div id="examRun" style="display:none">
+    <div class="panel">
+      <div class="exam-top">
+        <div class="timer" id="examTimer">--:--</div>
+        <span style="color:var(--muted);font-size:14px">Answered <b id="examAnswered">0</b> / <b id="examTotal">0</b></span>
+        <button class="btn" style="margin-left:auto" onclick="finishExam(true)">Finish exam</button>
+        <button class="btn gray" onclick="quitExam()">Quit</button>
+      </div>
+      <div class="palette" id="examPalette"></div>
+    </div>
+    <div id="examQHolder"></div>
+    <div class="panel" style="display:flex;gap:10px;justify-content:space-between">
+      <button class="btn ghost" onclick="examNav(-1)">&larr; Previous</button>
+      <button class="btn" onclick="examNav(1)">Next &rarr;</button>
+    </div>
+  </div>
+  <div id="examResult" style="display:none"></div>
+</section>
+
+<!-- ================= STUDY GUIDE ================= -->
+<section class="view" id="view-guide">
+  <div class="sg">
+
+  <div class="panel">
+    <h2>How to use this trainer</h2>
+    <p style="font-size:14.5px">Every question from your three PDF files is here (duplicates merged), each with the correct answer and a short explanation. Practice mode gives instant feedback and saves your progress in the browser. Mock Exam mode builds a timed, silent quiz like the real Moodle one. Read the study guide below first, then drill the categories you keep getting wrong.</p>
+  </div>
+
+  <details open>
+    <summary>Lecture 1 + Section 1&2 — OOP Revision (Employee project)</summary>
+    <div class="inner">
+      <h3>Core definitions (know them word-for-word)</h3>
+      <ul>
+        <li><b>Class</b> — the blueprint for an object; one or more objects can be created from it. <b>Object</b> — an instance of a class.</li>
+        <li><b>Constructor</b> — a special method automatically called when an object is created. Same name as the class, <u>no return type</u>, not inherited, can be overloaded.</li>
+        <li><b>Method overloading</b> — same method name, <u>different parameter lists</u>, in the same class. Resolved at <b>compile time</b> → <b>static / compile-time polymorphism</b>.</li>
+        <li><b>Method overriding</b> — a subclass provides its own implementation of a superclass method with the <u>same name, same parameters, same return type</u>. Resolved at <b>run time</b> → <b>runtime polymorphism</b>.</li>
+        <li><b>Inheritance</b> — a new class <code>extends</code> an existing class and inherits its members. It is an <b>IS-A</b> relationship. Gives reusability, enables overriding, supports abstraction. Java allows single, multilevel and hierarchical inheritance — <b>not multiple class inheritance</b> (ambiguity; allowed only through interfaces).</li>
+        <li><b>Polymorphism</b> — "many forms": a superclass reference variable can reference a subclass object (<code>Employee e = new SalariedEmployee();</code>). With such a reference you may only <u>call methods defined in Employee</u>, but the <u>overridden version of the actual object</u> executes.</li>
+        <li><b>Encapsulation</b> — bundle data + methods in a class and hide internals: <code>private</code> fields with getters/setters that validate.</li>
+        <li><b>Abstraction</b> — hide unnecessary details (coffee machine, ATM). Achieved with <b>abstract classes and interfaces</b>.</li>
+        <li><b>Interface</b> — a contract: attributes are <code>public static final</code> by default, methods are <code>public abstract</code> by default; a class <code>implements</code> many interfaces and must implement all abstract methods (or be abstract).</li>
+        <li><b>Abstract class</b> — cannot be instantiated; may mix abstract and concrete methods; contains an abstract method ⇒ the class must be declared <code>abstract</code>; every concrete subclass must implement the abstract methods.</li>
+        <li><code>toString()</code> exists in every class (from Object) but is only useful once you override it.</li>
+      </ul>
+      <h3>The Employee project (the exam's favourite example)</h3>
+      <ul>
+        <li><code>Employee</code> (Name, SSN, address; methods getName/setSSN..., and <code>Earning()</code>) → made <b>abstract</b> because Earning's calculation differs per employee type.</li>
+        <li>Subclasses: <code>SalariedEmployee</code> (salary + bonus − deductions), <code>HourlyEmployee</code> (hours × rate), <code>CommissionEmployee</code> (commission on sales), and <code>BasePlusCommissionEmployee</code> which <b>extends CommissionEmployee</b> (two-level hierarchy) and adds a base salary + setBase.</li>
+        <li><code>Displayable</code> interface: forces every subclass to provide <code>displayAllDetails()</code> and <code>displayEarning()</code> — "the interface is like a contract".</li>
+        <li><code>Department</code> holds an array of Employees; <code>Main</code> demonstrates <code>Employee e = new SalariedEmployee();</code></li>
+      </ul>
+      <h3>Access modifiers &amp; inheritance</h3>
+      <table>
+        <tr><th>Modifier</th><th>Same class</th><th>Same package</th><th>Subclass (other package)</th><th>Everywhere</th></tr>
+        <tr><td>private</td><td>Yes</td><td>No</td><td>No</td><td>No</td></tr>
+        <tr><td>default</td><td>Yes</td><td>Yes</td><td>No</td><td>No</td></tr>
+        <tr><td>protected</td><td>Yes</td><td>Yes</td><td>Yes (via subclass)</td><td>No</td></tr>
+        <tr><td>public</td><td>Yes</td><td>Yes</td><td>Yes</td><td>Yes</td></tr>
+      </table>
+      <h3>Static members, static block &amp; IIB</h3>
+      <ul>
+        <li>A <b>static method</b> belongs to the class, can use static data, but cannot use <code>this</code>/<code>super</code> or non-static members directly.</li>
+        <li>A <b>static block</b> runs once at class loading, <u>before main</u>.</li>
+        <li>An <b>Instance Initialization Block (IIB)</b> runs at every <code>new</code>, after the parent constructor (<code>super()</code>) and before the rest of the child constructor.</li>
+      </ul>
+      <h3>Abstract class vs Interface</h3>
+      <table>
+        <tr><th></th><th>Abstract class</th><th>Interface</th></tr>
+        <tr><td>Keyword</td><td>abstract class / extends</td><td>interface / implements</td></tr>
+        <tr><td>Methods</td><td>abstract + concrete allowed</td><td>abstract by default (all abstract as taught)</td></tr>
+        <tr><td>Variables</td><td>any</td><td>public static final only</td></tr>
+        <tr><td>Constructor</td><td>yes</td><td>no</td></tr>
+        <tr><td>Multiple</td><td>extend only one class</td><td>implement many interfaces</td></tr>
+      </table>
+    </div>
+  </details>
+
+  <details>
+    <summary>Lecture 2 + Section 3&4 — SOLID Principles (Robert C. Martin, "Uncle Bob")</summary>
+    <div class="inner">
+      <p>SOLID = five design guidelines making code understandable, flexible, maintainable, reusable, <b>less coupled and more cohesive</b>. Guidelines — not patterns, not rules.</p>
+      <table>
+        <tr><th>#</th><th>Principle</th><th>One-liner</th><th>Code smell</th><th>Typical fix</th></tr>
+        <tr><td><b>S</b></td><td>Single Responsibility</td><td>A class has <b>one responsibility / one reason to change</b></td><td>OrderService does calculate() + save() + print(); a class with chef + gardener + painter + driver jobs</td><td>Split into PriceCalculator / ReceiptPrinter / Repository / EmailService</td></tr>
+        <tr><td><b>O</b></td><td>Open/Closed</td><td><b>Open for extension, closed for modification</b> — add behavior without editing existing code</td><td>if/else or switch on type strings (ShapePrinter, DiscountCalculator); every new shape edits draw()</td><td>Abstract superclass/interface + one subclass per behavior; add new classes</td></tr>
+        <tr><td><b>L</b></td><td>Liskov Substitution</td><td>A subtype must be <b>replaceable for its base type without altering correctness</b></td><td>Subclass overrides a method to throw <code>UnsupportedOperationException</code> (Penguin extends Bird, Square extends Rectangle, Bicycle extends Vehicle)</td><td>Remove the inheritance; separate capabilities into interfaces (Flyable)</td></tr>
+        <tr><td><b>I</b></td><td>Interface Segregation</td><td>Clients should <b>not be forced to depend on interfaces they don't use</b> — split fat interfaces</td><td>Worker{work,eat} implemented by RobotWorker that can't eat; MultiFunctionDevice{print,scan,fax}</td><td>Small role-specific interfaces (Workable + Eatable; Printable, Scannable, Faxable)</td></tr>
+        <tr><td><b>D</b></td><td>Dependency Inversion</td><td>High-level modules should not depend on low-level modules — <b>both depend on abstractions</b>; details depend on abstractions</td><td><code>new</code> ConcreteClass inside a class (Switch→Light, Application→Database, DeliveryCompany→DeliveryDriver)</td><td>Define an interface, inject the implementation via the constructor (dependency injection)</td></tr>
+      </table>
+      <h3>How the exam phrases each principle</h3>
+      <ul>
+        <li>SRP: "one reason to change", "easy to test/understand", "lower coupling", "split saveToDatabase / sendEmail out of the class".</li>
+        <li>OCP: "add a new payment type by creating a new class", "if-else requires modifying the method", "open for <b>extension</b> / closed for <b>modification</b> — don't mix the order up!".</li>
+        <li>LSP: "Square/Rectangle", "Penguin/Bird", "subtype breaks the contract", "throws where the base promises to work".</li>
+        <li>ISP: "large/fat interface forces unused methods", "split into smaller role-specific interfaces".</li>
+        <li>DIP: "depend on abstractions, not concretions", "dependency injected rather than created inside".</li>
+      </ul>
+      <div class="tip"><b>Trap:</b> a class that <i>implements an interface but throws UnsupportedOperationException</i> in a method breaks <b>LSP</b> (behavior contract) and signals an <b>ISP</b> design problem (it was forced to implement what it doesn't need). Read the question: asking about the <i>interface being too large</i> → ISP; asking about <i>substitution breaking behavior</i> → LSP.</div>
+    </div>
+  </details>
+
+  <details>
+    <summary>Lecture 3 + Section 5 — Design Patterns intro &amp; Singleton</summary>
+    <div class="inner">
+      <h3>Design patterns in general</h3>
+      <ul>
+        <li>A design pattern = a <b>general, reusable solution to a commonly occurring problem</b> in software design. It is a <u>template to adapt</u>, <b>not code to copy-paste</b>, not an algorithm, and it never replaces testing.</li>
+        <li>Benefits: reusable, maintainable, easy to understand, industry-standard vocabulary, reduces duplication and dependency between components.</li>
+        <li>Prerequisites to learn them: a programming language, OOP concepts, SOLID principles.</li>
+        <li><b>Three categories:</b>
+          <ul>
+            <li><b>Creational</b> — how objects are created: <b>Singleton, Factory</b> (+ Builder, Prototype).</li>
+            <li><b>Structural</b> — how classes/objects are composed into larger structures: Adapter, Decorator, Proxy, Facade.</li>
+            <li><b>Behavioral</b> — how objects communicate/interact: Observer, Command, Strategy, Template, Mediator.</li>
+          </ul>
+        </li>
+      </ul>
+      <h3>Singleton pattern</h3>
+      <ul>
+        <li>Restricts a class to <b>one single instance</b> and provides a <b>global access point</b>. Creational pattern.</li>
+        <li>Three implementation steps: <b>private constructor</b>, <b>private static reference</b> to the instance, <b>public static getInstance()</b> that creates the instance if it is <code>null</code> and returns it.</li>
+        <li>Uses: Logger, database connection, configuration manager, caches — any shared resource that must exist once.</li>
+      </ul>
+      <pre class="code">public class Company {
+    private static Company instance;          // private static reference
+    private String name;
+    private Company(String name) { this.name = name; }   // private constructor
+    public static Company getInstance(String name) {
+        if (instance == null) { instance = new Company(name); }
+        return instance;
+    }
+}
+// Main: Company a = Company.getInstance("Tech");
+//       Company b = Company.getInstance("Other");
+//       System.out.println(a == b);   // true  -> same object, same hash code</pre>
+      <h3>Eager vs Lazy Singleton</h3>
+      <table>
+        <tr><th></th><th>Eager</th><th>Lazy</th></tr>
+        <tr><td>Created</td><td>At application startup / class load (public static reference)</td><td>On first <code>getInstance()</code> call</td></tr>
+        <tr><td>Resources</td><td>Wasteful if never used / resource-heavy</td><td>Memory-efficient, but first call is slower (unpredictable timing)</td></tr>
+        <tr><td>Threads</td><td><b>Inherently thread-safe</b> (created before any thread)</td><td><b>Needs synchronization</b> — two threads could otherwise create two instances</td></tr>
+        <tr><td>Control</td><td>No initialization flexibility</td><td>Can initialize based on conditions/config</td></tr>
+      </table>
+      <div class="tip"><b>Exam traps:</b> "public constructor ensures one instance" = False (it must be private). "Create a <b>public</b> static variable to hold the instance" is NOT a proper step — the reference stays private. Singleton is CREATIONAL, not structural. Eager is more thread-safe; Lazy needs synchronization.</div>
+    </div>
+  </details>
+
+  <details>
+    <summary>Lecture 4 + Section 5 — Factory pattern</summary>
+    <div class="inner">
+      <ul>
+        <li>Factory = <b>creational</b> pattern: create objects <b>without the client knowing the exact class</b>. The client asks the factory for a product by name/type and receives it via the common abstraction.</li>
+        <li>It <b>encapsulates creation logic</b> (hidden from the client), <b>decreases the load on the client</b>, and reduces client–concrete-class coupling.</li>
+        <li>Lecture examples: <b>EnemyFactory</b> (client sends the enemy id → gets a Turtle or Bird), <b>SandwichFactory</b> (Cheese/Chicken Burger), plus <b>ShapeFactory</b> and <b>AnimalFactory</b> in the question bank.</li>
+        <li>Closely related principle: <b>OCP</b> — a new product = a new class + one more branch in the factory; client code unchanged.</li>
+      </ul>
+      <pre class="code">interface Shape { void draw(); }
+class Circle implements Shape { public void draw(){ System.out.println("Drawing a Circle"); } }
+
+class ShapeFactory {
+    public static Shape getShape(String shapeType) {
+        if (shapeType.equals("Circle")) return new Circle();
+        return null;
+    }
+}
+// Client:  Shape s = ShapeFactory.getShape("Circle");  s.draw();</pre>
+      <h3>Factory Method variant (abstract factory class)</h3>
+      <pre class="code">public abstract class ShapeFactory {
+    public abstract Shape createShape();      // subclass decides the product
+    public void renderShape() { createShape().draw(); }
+}
+public class CircleFactory extends ShapeFactory {
+    public Shape createShape() { return new Circle(); }
+}</pre>
+      <ul>
+        <li>Section 5 example: abstract <code>Employee</code> ← Manager/Developer/Intern, built by <code>EmployeeFactory.create(EmployeeType, name)</code>; the factory builds the team and the <b>Company Singleton</b> stores it — both patterns working together.</li>
+        <li>Don't use a factory when creation is trivial: it just adds complexity.</li>
+      </ul>
+    </div>
+  </details>
+
+  <details>
+    <summary>Quick-fire exam tips &amp; classic traps</summary>
+    <div class="inner">
+      <ol>
+        <li>Overloading = same name, different parameters, <b>compile-time</b>. Overriding = same signature in subclass, <b>runtime</b>. "Overloading is runtime polymorphism" = always False.</li>
+        <li>Inheritance = IS-A; composition = HAS-A / PART-OF.</li>
+        <li>Abstract class: can have constructors and concrete methods, cannot be instantiated. Interface: contract, no constructor, attributes are public static final; implement many.</li>
+        <li>Constructors: same name as class, no return type, not inherited, can be overloaded.</li>
+        <li>SRP question with a class doing X + save to DB + send email → the DB/email parts move out.</li>
+        <li>OCP: "open for extension, closed for modification" — never the reverse. Violated by if/else type-strings where new types force edits.</li>
+        <li>LSP: any subclass throwing <code>UnsupportedOperationException</code> instead of honoring the parent's behavior = LSP violation.</li>
+        <li>ISP: "fat interface", "implements methods it never uses" → split the interface.</li>
+        <li>DIP: "both depend on abstractions", "injected rather than new-ed inside". Fix = interface + constructor injection.</li>
+        <li>SOLID letters: <b>S</b>ingle Responsibility, <b>O</b>pen/Closed, <b>L</b>iskov Substitution, <b>I</b>nterface Segregation, <b>D</b>ependency Inversion (Robert C. Martin).</li>
+        <li>Patterns: 3 categories — Creational (Singleton, Factory), Structural (Adapter, Decorator, Proxy, Facade), Behavioral (Observer, Command, Strategy, Template, Mediator). Observer = GUI event listeners. Mediator = centralizes communication.</li>
+        <li>Singleton: private constructor + private static instance + public static getInstance(); Lazy = on demand + needs synchronization; Eager = at startup + thread-safe; bad for multiple instances/configurations; complicates unit testing.</li>
+        <li>Factory: hides creation, promotes loose coupling, supports OCP; client asks for a type and gets the product; factoryMethod() / getShape(type).</li>
+        <li>Design pattern = reusable solution template, NOT copy-paste code, NOT a testing replacement, NOT always mandatory, NOT only for OOP languages.</li>
+      </ol>
+    </div>
+  </details>
+
+  </div>
+</section>
+
+<footer>Good luck on your exam — you've got this.</footer>
+</div>
+
+<script>
+
+/* ===== qdata1 ===== */
+// Part 1: Quiz 1 (Moodle) + OOP question bank
+window.QUIZ_DATA = window.QUIZ_DATA || [];
+QUIZ_DATA.push(
+
+// ============ QUIZ 1 (20 questions, exactly as the Moodle quiz) ============
+{c:"Quiz 1", ty:"mcq", q:"Which OOP mechanism allows a subclass to provide its own implementation of a method defined in its parent class?",
+ o:["Method overloading","Encapsulation","Method overriding","Composition"], a:2,
+ e:"Overriding = a subclass re-implements a superclass method with the same signature; resolved at runtime."},
+
+{c:"Quiz 1", ty:"mcq", q:"Which type of polymorphism is achieved through method overriding?",
+ o:["Static polymorphism","Data hiding","Runtime polymorphism","Compile-time polymorphism"], a:2,
+ e:"Overriding is resolved at run-time (dynamic dispatch), so it is runtime polymorphism. Overloading is compile-time."},
+
+{c:"Quiz 1", ty:"mcq", q:"A class handles database access, report formatting, and email sending. Which SOLID principle is most clearly violated?",
+ o:["Interface Segregation Principle","Liskov Substitution Principle","Single Responsibility Principle","Open/Closed Principle"], a:2,
+ e:"Three different responsibilities (persistence, presentation, messaging) = three reasons to change. SRP says one responsibility per class."},
+
+{c:"Quiz 1", ty:"mcq", q:"A Square class inherits from Rectangle but breaks behavior when width and height are set independently. Which principle is violated?",
+ o:["Single Responsibility Principle","Liskov Substitution Principle","Open/Closed Principle","Interface Segregation Principle"], a:1,
+ e:"Classic LSP violation: a Square cannot substitute a Rectangle without breaking correctness."},
+
+{c:"Quiz 1", ty:"mcq", q:"You add a new payment type by creating a new class instead of modifying the existing checkout logic. Which principle does this best follow?",
+ o:["Single Responsibility Principle","Open/Closed Principle","Interface Segregation Principle","Liskov Substitution Principle"], a:1,
+ e:"Extending by adding a new class without modifying existing code = open for extension, closed for modification (OCP)."},
+
+{c:"Quiz 1", ty:"mcq", q:"A large interface forces implementing classes to define methods they never use. Which principle is violated?",
+ o:["Open/Closed Principle","Interface Segregation Principle","Liskov Substitution Principle","Single Responsibility Principle"], a:1,
+ e:"A 'fat' interface forcing unused implementations violates ISP: split it into small, role-specific interfaces."},
+
+{c:"Quiz 1", ty:"mcq", q:"Which OOP relationship is described as a 'is-a' relationship?",
+ o:["Inheritance","Overriding","Composition","Abstraction"], a:0,
+ e:"Inheritance = IS-A (Dog is-an Animal). Composition = HAS-A / PART-OF."},
+
+{c:"Quiz 1", ty:"mcq", q:"Which practice best supports encapsulation?",
+ o:["Avoiding classes and using global variables","Using private fields with controlled access through methods","Overriding every method","Making all fields public"], a:1,
+ e:"Encapsulation = private fields + public getters/setters that control and validate access."},
+
+{c:"Quiz 1", ty:"mcq", q:"Which principle focuses on ensuring that a derived type can replace its base type without breaking correctness?",
+ o:["Interface Segregation Principle","Liskov Substitution Principle","Single Responsibility Principle","Open/Closed Principle"], a:1,
+ e:"That is the exact definition of the Liskov Substitution Principle."},
+
+{c:"Quiz 1", ty:"mcq", q:"Which design best follows the Interface Segregation Principle?",
+ o:["One large interface with all possible methods","Small, role-specific interfaces based on client needs","Public fields instead of interfaces","A base class with every method declared"], a:1,
+ e:"ISP: clients should depend only on the small interfaces that match their needs."},
+
+{c:"Quiz 1", ty:"tf", q:"A single class can be used to create multiple objects.", a:0,
+ e:"True. A class is a blueprint; you can instantiate many objects from it."},
+
+{c:"Quiz 1", ty:"tf", q:"Abstraction and encapsulation mean exactly the same thing.", a:1,
+ e:"False. Abstraction hides complexity by exposing only essential features; encapsulation bundles data+methods and restricts direct access to internal state."},
+
+{c:"Quiz 1", ty:"tf", q:"Method overloading is an example of runtime polymorphism.", a:1,
+ e:"False. Overloading is resolved at compile time (static/compile-time polymorphism). Overriding is the runtime one."},
+
+{c:"Quiz 1", ty:"tf", q:"The Single Responsibility Principle says a class should have only one reason to change.", a:0,
+ e:"True. That is the formal SRP definition."},
+
+{c:"Quiz 1", ty:"tf", q:"The Open/Closed Principle requires modifying existing code for every new feature.", a:1,
+ e:"False. OCP says add new behavior by extending (new classes/subclasses), not by modifying existing code."},
+
+{c:"Quiz 1", ty:"tf", q:"The Liskov Substitution Principle allows a subtype to break the contract of its base type.", a:1,
+ e:"False. LSP requires that a subtype can replace the base type without breaking the program's correctness or the base contract."},
+
+{c:"Quiz 1", ty:"tf", q:"The Interface Segregation Principle encourages large 'fat' interfaces.", a:1,
+ e:"False. ISP encourages splitting fat interfaces into small, client-specific ones."},
+
+{c:"Quiz 1", ty:"tf", q:"Composition can reduce coupling compared with deep inheritance hierarchies.", a:0,
+ e:"True. Composition (HAS-A) depends on public contracts instead of inheriting implementation details, so it usually couples less than deep inheritance."},
+
+{c:"Quiz 1", ty:"tf", q:"An interface can be used to define a contract that implementing classes must follow.", a:0,
+ e:"True. An interface declares methods a class must provide - it is a contract."},
+
+{c:"Quiz 1", ty:"tf", q:"A non-abstract class implementing an interface must provide implementations for the interface's abstract methods.", a:0,
+ e:"True. Otherwise the compiler forces you to declare the class abstract."},
+
+// ============ OOP QUESTION BANK ============
+{c:"OOP", ty:"mcq", q:"What is the difference between a concrete class and an abstract class in object-oriented programming?",
+ o:["A concrete class cannot be instantiated, while an abstract class can.","A concrete class can be instantiated, while an abstract class may contain abstract methods that need to be implemented by subclasses.","Concrete classes define the structure of a system, while abstract classes handle the behavior.","There is no real difference; they are interchangeable terms."], a:1,
+ e:"Abstract classes may hold abstract (unimplemented) methods and cannot be instantiated; concrete classes can be instantiated."},
+
+{c:"OOP", ty:"mcq", q:"What is the meaning of 'encapsulation' in object-oriented programming?",
+ o:["The process of converting data from one format to another.","The mechanism of inheriting properties and methods from a parent class.","The bundling of data and methods that operate on that data within a class, hiding the internal details.","The ability of an object to take on many forms."], a:2,
+ e:"Encapsulation = data + methods bundled in a class with internal details hidden (private fields, controlled access)."},
+
+{c:"OOP", ty:"mcq", q:"In OOP, which concept is demonstrated when a subclass provides a specific implementation of a method already defined in its superclass?",
+ o:["Abstraction","Inheritance","Polymorphism","Method Overriding"], a:3,
+ e:"That is the definition of method overriding."},
+
+{c:"OOP", ty:"mcq", q:"What will be the output of the following code? (Animal / Dog / Cat loop)",
+ code:"class Animal { public String sound() { return \"Some sound\"; } }\nclass Dog extends Animal { @Override public String sound() { return \"Bark\"; } }\nclass Cat extends Animal { @Override public String sound() { return \"Meow\"; } }\n// main: Animal[] animals = {new Dog(), new Cat(), new Animal()};\n//        for (Animal a : animals) System.out.println(a.sound());",
+ o:["Bark, Meow, Some sound","Some sound, Some sound, Some sound","Meow, Bark, Some sound","Bark, Some sound, Meow"], a:0,
+ e:"Each object executes its own overridden sound() at runtime: Dog barks, Cat meows, Animal gives the default."},
+
+{c:"OOP", ty:"mcq", q:"What will be the output of the following code? (Parent p = new Child(); p.show();)",
+ code:"class Parent { public void show() { System.out.println(\"Parent show\"); } }\nclass Child extends Parent { public void show() { System.out.println(\"Child show\"); } }\n// main: Parent p = new Child(); p.show();",
+ o:["Child show","Parent show","Compilation Error","Runtime Error"], a:0,
+ e:"Runtime polymorphism: the actual object type (Child) decides which show() runs."},
+
+{c:"OOP", ty:"mcq", q:"Which of the following code snippets best demonstrates encapsulation? (four Account variants)",
+ code:"a) public double balance;\nb) double balance; public Account(double b){this.balance=b;}\nc) protected double balance; public void setBalance(double b){this.balance=b;}\nd) private double balance; getBalance(); deposit(a){ if(a>0) balance+=a; } withdraw(a){ if(a>0 && a<=balance) balance-=a; }",
+ o:["Snippet a","Snippet b","Snippet c","Snippet d"], a:3,
+ e:"Private field + getters + methods that validate changes = full encapsulation with controlled, validated access."},
+
+{c:"OOP", ty:"mcq", q:"Which of the following is NOT a characteristic of object-oriented programming (OOP)?",
+ o:["Encapsulation","Inheritance","Polymorphism","Compilation"], a:3,
+ e:"The OOP pillars: encapsulation, inheritance, polymorphism, abstraction. Compilation is a language process, not an OOP characteristic."},
+
+{c:"OOP", ty:"mcq", q:"Which of the following best describes polymorphism in OOP?",
+ o:["The ability of a class to inherit methods from a superclass","The ability of different objects to respond in unique ways to the same method call","The process of hiding internal implementation details of a class","The creation of new classes from existing classes"], a:1,
+ e:"Poly = many, morph = forms: the same call behaves differently depending on the actual object."},
+
+{c:"OOP", ty:"mcq", q:"What is the primary benefit of encapsulation in OOP?",
+ o:["It ensures that an object can only have one instance","It allows classes to be easily inherited by subclasses","It hides the internal details of an object and only exposes necessary parts","It allows methods to be overridden in subclasses"], a:2,
+ e:"Encapsulation protects internal state and exposes only what is necessary (information hiding)."},
+
+{c:"OOP", ty:"mcq", q:"Which OOP concept is demonstrated when a subclass overrides a method from its superclass?",
+ o:["Encapsulation","Abstraction","Inheritance","Polymorphism"], a:3,
+ e:"Overriding is what makes runtime polymorphism possible."},
+
+{c:"OOP", ty:"mcq", q:"What will be the output when the following code is executed?",
+ code:"class Shape { public void draw() { System.out.println(\"Drawing a shape\"); } }\nclass Circle extends Shape { @Override public void draw() { System.out.println(\"Drawing a circle\"); } }\n// Shape shape = new Circle(); shape.draw();",
+ o:["Drawing a shape","Drawing a circle","Compilation error","Runtime error"], a:1,
+ e:"Dynamic dispatch: the Circle object's draw() wins at runtime even though the reference type is Shape."},
+
+{c:"OOP", ty:"mcq", q:"Which of the following best describes the relationship between classes in inheritance?",
+ o:["'Has-a' relationship","'Is-a' relationship","'Uses-a' relationship","'Part-of' relationship"], a:1,
+ e:"Inheritance = IS-A. Has-a/part-of = composition/aggregation."},
+
+{c:"OOP", ty:"mcq", q:"In OOP, abstraction is achieved through:",
+ o:["Concrete classes","Abstract classes and interfaces","Constructors","Static methods"], a:1,
+ e:"Both abstract classes and interfaces let you declare WHAT without HOW."},
+
+{c:"OOP", ty:"mcq", q:"Which of the following statements about constructors in Java is TRUE?",
+ o:["Constructors can be inherited","Constructors must have the same name as the class","Constructors can return a value","A class can have only one constructor"], a:1,
+ e:"A constructor shares the class name, has no return type, is not inherited, and can be overloaded (many constructors)."},
+
+{c:"OOP", ty:"mcq", q:"Which concept in OOP ensures that an object maintains control over its own state and only exposes limited functionality to the outside world?",
+ o:["Inheritance","Polymorphism","Encapsulation","Abstraction"], a:2,
+ e:"Encapsulation keeps state private and exposes limited, controlled operations."},
+
+{c:"OOP", ty:"mcq", q:"What is the primary purpose of an interface in OOP?",
+ o:["To allow multiple inheritance","To create concrete implementations of methods","To define a contract for classes to implement","To encapsulate data within a class"], a:2,
+ e:"An interface is a pure contract: it says what a class must do, not how."},
+
+{c:"OOP", ty:"tf", q:"Polymorphism allows the same method to behave differently based on the object it is acting upon.", a:0,
+ e:"True."},
+
+{c:"OOP", ty:"tf", q:"An abstract class can implement multiple interfaces in Java.", a:0,
+ e:"True. Any class in Java can implement many interfaces (implements A, B, C...)."},
+
+{c:"OOP", ty:"tf", q:"Polymorphism allows a method to have the same name but different implementations in different classes.", a:0,
+ e:"True (overriding across classes; overloading within one class)."},
+
+{c:"OOP", ty:"tf", q:"An abstract class cannot have any concrete methods.", a:1,
+ e:"False. Abstract classes can mix abstract and concrete (implemented) methods."},
+
+{c:"OOP", ty:"tf", q:"Encapsulation refers to the bundling of data and methods that operate on that data, while hiding the internal details from outside access.", a:0,
+ e:"True."},
+
+{c:"OOP", ty:"tf", q:"In OOP, inheritance allows a class to inherit from multiple classes directly.", a:1,
+ e:"False in Java: no multiple class inheritance (ambiguity problem); only one class can be extended. Multiple interfaces are allowed."},
+
+{c:"OOP", ty:"tf", q:"Method overriding is a form of polymorphism in which a subclass provides a specific implementation of a method that is already defined in its superclass.", a:0,
+ e:"True - runtime polymorphism."},
+
+{c:"OOP", ty:"tf", q:"Abstract classes can be instantiated directly.", a:1,
+ e:"False. You can only instantiate concrete subclasses."},
+
+{c:"OOP", ty:"tf", q:"In Java, a class can implement multiple interfaces.", a:0,
+ e:"True - implements Interface1, Interface2, ..."},
+
+{c:"OOP", ty:"tf", q:"Constructors are used to initialize objects and can have a return type.", a:1,
+ e:"False. Constructors initialize objects but have NO return type (not even void)."},
+
+{c:"OOP", ty:"tf", q:"The 'this' keyword in Java is used to refer to the current object instance.", a:0,
+ e:"True. 'this' = the current object; 'super' refers to the parent part."},
+
+{c:"OOP", ty:"tf", q:"Interfaces in Java can contain both abstract methods and concrete methods.", a:1,
+ e:"False (as taught in this course): interface methods are abstract by default and attributes are public static final."}
+
+);
+
+/* ===== qdata2 ===== */
+// Part 2: SOLID mixed practice + SRP practice + OCP practice
+window.QUIZ_DATA = window.QUIZ_DATA || [];
+QUIZ_DATA.push(
+
+// ============ SOLID MIXED PRACTICE ============
+{c:"SOLID Mixed", ty:"mcq", q:"Which of the following options correctly follows the Interface Segregation Principle? (Printer with printDocument, scanDocument, faxDocument; SimplePrinter implements all three)",
+ code:"interface Printer { void printDocument(); void scanDocument(); void faxDocument(); }\nclass SimplePrinter implements Printer {\n  public void printDocument() { /*...*/ }\n  public void scanDocument()  { /*...*/ }\n  public void faxDocument()   { /*...*/ }\n}",
+ o:["The Printer interface should be an abstract class.","This code is already following ISP.","SimplePrinter should only implement the methods it needs.","The Printer interface should be split into smaller interfaces."], a:3,
+ e:"ISP fix: split the fat Printer into small interfaces (Printable, Scannable, Faxable) so each class implements only what it needs."},
+
+{c:"SOLID Mixed", ty:"mcq", q:"Which of the following classes violates the Single Responsibility Principle? (Order: calculateTotalPrice, saveToDatabase, sendOrderConfirmation)",
+ code:"class Order {\n  public void calculateTotalPrice()  { /*...*/ }\n  public void saveToDatabase()       { /*...*/ }\n  public void sendOrderConfirmation(){ /*...*/ }\n}",
+ o:["The class is correctly designed according to SRP.","The calculateTotalPrice method should be moved to another class.","The saveToDatabase and sendOrderConfirmation methods should be moved to separate classes.","All methods should be in separate classes."], a:2,
+ e:"Business logic belongs to Order; persistence and email are separate responsibilities - move them to repository/email classes."},
+
+{c:"SOLID Mixed", ty:"mcq", q:"What will be the output of the following code? (Animal/Dog/Cat array loop)",
+ code:"class Animal { public String sound() { return \"Some sound\"; } }\nclass Dog extends Animal { @Override public String sound() { return \"Bark\"; } }\nclass Cat extends Animal { @Override public String sound() { return \"Meow\"; } }\n// Animal[] animals = {new Dog(), new Cat(), new Animal()};",
+ o:["Bark, Meow, Some sound","Some sound, Some sound, Some sound","Meow, Bark, Some sound","Bark, Some sound, Meow"], a:0,
+ e:"Overridden methods are chosen by the actual object at runtime, in array order: Dog, Cat, Animal."},
+
+{c:"SOLID Mixed", ty:"mcq", q:"What will be the output of the following code? (Parent p = new Child())",
+ code:"class Parent { public void show() { System.out.println(\"Parent show\"); } }\nclass Child extends Parent { public void show() { System.out.println(\"Child show\"); } }\n// Parent p = new Child(); p.show();",
+ o:["Child show","Parent show","Compilation Error","RunTime Error"], a:0,
+ e:"The reference is Parent but the object is Child; overridden method of Child executes."},
+
+{c:"SOLID Mixed", ty:"mcq", q:"Which of the following code snippets best demonstrates encapsulation?",
+ code:"a) public class Account { public double balance; }\nb) public class Account { double balance; public Account(double balance){ this.balance=balance; } }\nc) public class Account { protected double balance; public void setBalance(double balance){ this.balance=balance; } }\nd) public class Account { private double balance; public double getBalance(){ return balance; } public void deposit(double amount){ if(amount>0) balance+=amount; } public void withdraw(double amount){ if(amount>0 && amount<=balance) balance-=amount; } }",
+ o:["Snippet a","Snippet b","Snippet c","Snippet d"], a:3,
+ e:"private field + controlled access with validation (cannot withdraw more than the balance) is the strongest encapsulation."},
+
+{c:"SOLID Mixed", ty:"mcq", q:"A fire system that needs to warn employees when a fire occurs, what signals are used to transmit this data?",
+ o:["Vibration","Flag","Buzz","Light"], a:2,
+ e:"The warning is transmitted as an audible alarm signal - the buzzer (Buzz) - which alerts employees immediately. (As covered in the fire-alarm system example in the labs.)"},
+
+{c:"SOLID Mixed", ty:"mcq", q:"Which principle is violated if a class has more than one reason to change?",
+ o:["Single Responsibility Principle (SRP)","Open/Closed Principle (OCP)","Interface Segregation Principle (ISP)","Liskov Substitution Principle (LSP)"], a:0,
+ e:"'One reason to change' is literally the SRP definition."},
+
+{c:"SOLID Mixed", ty:"mcq", q:"A class should be open for extension but closed for modification. Which principle does this statement refer to?",
+ o:["Dependency Inversion Principle (DIP)","Single Responsibility Principle (SRP)","Open/Closed Principle (OCP)","Interface Segregation Principle (ISP)"], a:2,
+ e:"That is the OCP motto."},
+
+{c:"SOLID Mixed", ty:"mcq", q:"Which principle ensures that derived classes should be substitutable for their base classes?",
+ o:["Single Responsibility Principle (SRP)","Liskov Substitution Principle (LSP)","Open/Closed Principle (OCP)","Dependency Inversion Principle (DIP)"], a:1,
+ e:"Substitutability of subtypes = LSP."},
+
+{c:"SOLID Mixed", ty:"mcq", q:"In the context of Interface Segregation Principle (ISP), what is the main reason behind creating smaller, specific interfaces?",
+ o:["To simplify the implementation of classes","To avoid forcing a class to implement methods it does not use","To increase the complexity of a program","To ensure that classes depend on only one interface"], a:1,
+ e:"Small interfaces mean no client is forced to implement irrelevant methods."},
+
+{c:"SOLID Mixed", ty:"mcq", q:"Which of the following best demonstrates the Dependency Inversion Principle (DIP)?",
+ o:["High-level modules should depend on low-level modules.","Low-level modules should depend on high-level modules.","Both high-level and low-level modules should depend on abstractions.","High-level modules should be completely independent of any modules."], a:2,
+ e:"DIP: both sides meet at an abstraction (interface/abstract class), not on each other."},
+
+{c:"SOLID Mixed", ty:"mcq", q:"If a class violates the Open/Closed Principle, what is likely to happen when you need to add new functionality?",
+ o:["The class can be extended without any modification.","The existing class code has to be modified.","New classes can inherit without any issues.","The class automatically adapts to changes."], a:1,
+ e:"Without OCP, every new feature means editing (and risking) existing code."},
+
+{c:"SOLID Mixed", ty:"mcq", q:"Why is adhering to the Single Responsibility Principle (SRP) important?",
+ o:["It increases the coupling between classes.","It simplifies code maintenance and testing.","It allows one class to handle all types of tasks.","It reduces the number of methods in a class."], a:1,
+ e:"One responsibility = one focused class = easier to test, understand and maintain."},
+
+{c:"SOLID Mixed", ty:"mcq", q:"Which principle helps in ensuring that classes have dependencies injected into them rather than creating dependencies directly?",
+ o:["Liskov Substitution Principle (LSP)","Interface Segregation Principle (ISP)","Dependency Inversion Principle (DIP)","Single Responsibility Principle (SRP)"], a:2,
+ e:"DIP leads to dependency injection: pass an abstraction in (usually via constructor) instead of using 'new' inside."},
+
+{c:"SOLID Mixed", ty:"mcq", q:"What could be a consequence of violating the Liskov Substitution Principle?",
+ o:["Classes may become too large and unmanageable.","Derived classes may not behave as expected when used in place of a base class.","Classes would become tightly coupled.","Interfaces would need to be redefined frequently."], a:1,
+ e:"LSP violations break code that was written against the base type - substitutes behave unexpectedly."},
+
+{c:"SOLID Mixed", ty:"mcq", q:"The Interface Segregation Principle (ISP) states that:",
+ o:["A class should implement all available interfaces to ensure full functionality.","A client should not be forced to depend on interfaces it does not use.","Interfaces should be avoided in most cases.","Classes should use only one interface to minimize complexity."], a:1,
+ e:"The formal ISP statement (Robert C. Martin)."},
+
+{c:"SOLID Mixed", ty:"mcq", q:"Identify the violation of SRP in the following code and suggest how to fix it. (ReportManager: generateReport, printReport, saveReportToDatabase)",
+ code:"public class ReportManager {\n  public void generateReport()      { /*...*/ }\n  public void printReport()         { /*...*/ }\n  public void saveReportToDatabase(){ /*...*/ }\n}",
+ o:["All methods should be in separate classes.","The generateReport and printReport methods should be combined.","The saveReportToDatabase method should be moved to another class.","No violation."], a:2,
+ e:"Generating/printing the report are report concerns; saving to a database is persistence - move it to a repository/DAO class."},
+
+{c:"SOLID Mixed", ty:"mcq", q:"Which part of the following code violates the OCP? (Shape.draw(String shapeType) with if-else)",
+ code:"public class Shape {\n  public void draw(String shapeType) {\n    if (shapeType.equals(\"Circle\")) { System.out.println(\"Drawing Circle\"); }\n    else if (shapeType.equals(\"Square\")) { System.out.println(\"Drawing Square\"); }\n  }\n}",
+ o:["The draw method should use an abstract class.","The method uses if-else to handle different shapes.","New shapes require modifying the draw method.","The code is correctly following OCP."], a:2,
+ e:"The OCP problem: every new shape forces you to edit draw(). Fix: abstract Shape with abstract draw(), one subclass per shape."},
+
+{c:"SOLID Mixed", ty:"mcq", q:"Analyze the code snippet below. Does it violate the LSP? (Rectangle / Square with overridden setters)",
+ code:"class Rectangle { private int width, height;\n  public void setWidth(int w){ this.width=w; } public void setHeight(int h){ this.height=h; }\n  public int getArea(){ return width*height; } }\nclass Square extends Rectangle {\n  @Override public void setWidth(int w){ super.setWidth(w); super.setHeight(w); }\n  @Override public void setHeight(int h){ super.setWidth(h); super.setHeight(h); } }",
+ o:["Yes, because Square violates the expected behavior of Rectangle.","No, the code correctly follows LSP.","The getArea method needs to be overridden in Square.","The Rectangle class should be abstract."], a:0,
+ e:"A Rectangle allows independent width/height; setting them independently on a Square does not work, so Square breaks Rectangle's contract."},
+
+{c:"SOLID Mixed", ty:"mcq", q:"What is wrong with the following interface?",
+ code:"public interface MultiFunctionDevice {\n  void print();\n  void scan();\n  void fax();\n}",
+ o:["The interface should be split into smaller interfaces.","All methods should be implemented by every class.","The fax method should be removed.","The code is fine as it is."], a:0,
+ e:"A fat MFD interface forces simple devices to implement print+scan+fax; split it by capability (ISP)."},
+
+{c:"SOLID Mixed", ty:"mcq", q:"Which code snippet below follows the Dependency Inversion Principle? (Option 1: Switch depends on Light; Option 2: Switch depends on Switchable interface)",
+ code:"// Option 1\nclass Switch { private Light light; ... light.turnOn(); }\n// Option 2\ninterface Switchable { void turnOn(); }\nclass Light implements Switchable { public void turnOn(){...} }\nclass Switch { private Switchable device; public Switch(Switchable device){ this.device=device; } public void press(){ device.turnOn(); } }",
+ o:["Option 1 follows DIP.","Option 2 follows DIP.","Neither option follows DIP.","Both options follow DIP."], a:1,
+ e:"In Option 2 the high-level Switch depends on the Switchable abstraction, so any switchable device can be plugged in."},
+
+// ============ SRP PRACTICE (10) ============
+{c:"SRP", ty:"mcq", q:"Identify the violation of SRP in the following code: (Report: generateReport, printReport)",
+ code:"class Report {\n  public String generateReport() { /* logic to generate report */ }\n  public void printReport()     { /* logic to print report */ }\n}",
+ o:["The generateReport method should be moved to another class.","The printReport method should be separated into a different class.","Both methods are fine in the same class.","The class should be abstract."], a:1,
+ e:"Generating is the Report's core job; printing is a separate presentation concern that changes for different reasons."},
+
+{c:"SRP", ty:"mcq", q:"Which of the following refactors would best follow SRP for the given code? (UserManager: addUser, saveUserData)",
+ code:"class UserManager {\n  public void addUser(String user)        { /* logic to add user */ }\n  public void saveUserData(String user)   { /* logic to save user data */ }\n}",
+ o:["Keep all methods in UserManager.","Create a new class UserDataSaver for saving user data.","Split addUser and saveUserData into different interfaces.","Convert UserManager into an abstract class."], a:1,
+ e:"Managing users vs persisting them are two responsibilities; move saving to UserDataSaver."},
+
+{c:"SRP", ty:"mcq", q:"What change can be made to adhere to SRP in the following snippet? (OrderProcessor: processOrder, sendConfirmationEmail)",
+ code:"class OrderProcessor {\n  public void processOrder()           { /* logic to process order */ }\n  public void sendConfirmationEmail()  { /* logic to send confirmation email */ }\n}",
+ o:["Move sendConfirmationEmail to a separate EmailService class.","Merge the class with OrderManager.","Make OrderProcessor abstract.","The current implementation already follows SRP."], a:0,
+ e:"Email sending is a separate responsibility and reason to change - give it to EmailService."},
+
+{c:"SRP", ty:"mcq", q:"Identify the class that violates SRP: (Invoice: calculateTotal, printInvoice, saveInvoiceToDatabase)",
+ code:"class Invoice {\n  public void calculateTotal()         { /* logic to calculate total */ }\n  public void printInvoice()           { /* logic to print invoice */ }\n  public void saveInvoiceToDatabase()  { /* logic to save invoice */ }\n}",
+ o:["calculateTotal should be separated.","printInvoice should be moved to a Printer class.","saveInvoiceToDatabase should be handled by InvoiceRepository.","All of the above."], a:3,
+ e:"Three responsibilities (calculation, printing, persistence) - each belongs in its own class."},
+
+{c:"SRP", ty:"mcq", q:"Which refactor would make the following class SRP-compliant? (Notification: sendSMS, sendEmail)",
+ code:"class Notification {\n  public void sendSMS(String message)   { /* logic to send SMS */ }\n  public void sendEmail(String message) { /* logic to send Email */ }\n}",
+ o:["Create SMSService and EmailService classes.","Keep all methods as is.","Add sendPushNotification to the class.","Merge Notification with MessageSender."], a:0,
+ e:"Each channel is its own responsibility - split into SMSService and EmailService."},
+
+{c:"SRP", ty:"mcq", q:"Spot the SRP violation in this class: (TaskHandler: createTask, logTask)",
+ code:"class TaskHandler {\n  public void createTask(String task) { /* logic to create a task */ }\n  public void logTask(String task)    { /* logic to log task */ }\n}",
+ o:["createTask should be moved to TaskCreator.","logTask should be moved to TaskLogger.","Both createTask and logTask should remain.","Create TaskManager instead."], a:1,
+ e:"Handling tasks and logging are different concerns; logging goes to TaskLogger."},
+
+{c:"SRP", ty:"mcq", q:"What is the correct way to refactor the following code? (Library: addBook, issueBook, calculateLateFees)",
+ code:"class Library {\n  public void addBook(String book)            { /* logic to add book */ }\n  public void issueBook(String book)          { /* logic to issue book */ }\n  public void calculateLateFees(String user)  { /* logic to calculate fees */ }\n}",
+ o:["Move calculateLateFees to FeeCalculator.","Split addBook into BookManager.","Separate issueBook to BookIssuer.","All of the above."], a:3,
+ e:"Catalog management, issuing and fee calculation are three separate responsibilities."},
+
+{c:"SRP", ty:"mcq", q:"Which aspect of SRP is violated here? (Employee: calculateSalary, saveToDatabase)",
+ code:"class Employee {\n  public void calculateSalary()  { /* logic to calculate salary */ }\n  public void saveToDatabase()   { /* logic to save employee data */ }\n}",
+ o:["Salary calculation should be in SalaryCalculator.","Database operation should be in EmployeeRepository.","Both a and b.","No changes needed."], a:2,
+ e:"Business logic and persistence are two responsibilities - extract both."},
+
+{c:"SRP", ty:"mcq", q:"Refactor suggestion for SRP compliance: (ReportManager: generateReport, sendReportEmail)",
+ code:"class ReportManager {\n  public void generateReport()    { /* logic to generate report */ }\n  public void sendReportEmail()   { /* logic to send report via email */ }\n}",
+ o:["Move sendReportEmail to EmailService.","Create ReportSender.","Leave ReportManager as is.","Combine with ReportGenerator."], a:0,
+ e:"Email delivery is an infrastructure concern; EmailService owns it."},
+
+{c:"SRP", ty:"mcq", q:"Best refactor for this scenario: (Account: debitAccount, generateStatement)",
+ code:"class Account {\n  public void debitAccount(double amount) { /* logic to debit */ }\n  public void generateStatement()         { /* logic to generate statement */ }\n}",
+ o:["Move generateStatement to StatementGenerator.","Create a separate TransactionService for debitAccount.","Leave the class as it is.","Merge Account with FinancialService."], a:0,
+ e:"The account owns balance transactions; statement/reporting generation is a separate responsibility."},
+
+// ============ OCP PRACTICE (10) ============
+{c:"OCP", ty:"mcq", q:"Identify the OCP violation in the following code: (DiscountCalculator with if-else per discount type)",
+ code:"class DiscountCalculator {\n  public double calculateDiscount(String type, double amount) {\n    if (type.equals(\"Christmas\")) return amount * 0.25;\n    else if (type.equals(\"NewYear\")) return amount * 0.20;\n    else return amount * 0.10;\n  }\n}",
+ o:["The code is already open for extension.","The code violates OCP as new conditions require modifying the existing method.","The calculateDiscount method should be split into multiple classes.","No changes needed."], a:1,
+ e:"Every new discount = editing calculateDiscount. Fix: a Discount interface + one class per discount."},
+
+{c:"OCP", ty:"mcq", q:"Which refactor would best adhere to OCP for the following code? (ReportPrinter: if PDF ... else if HTML)",
+ code:"class ReportPrinter {\n  public void printReport(String format) {\n    if (format.equals(\"PDF\"))  { /* logic to print PDF */ }\n    else if (format.equals(\"HTML\")) { /* logic to print HTML */ }\n  }\n}",
+ o:["Create separate classes for each report format.","Add more conditions as needed.","Keep the method as is.","Make ReportPrinter abstract."], a:0,
+ e:"PdfReportPrinter, HtmlReportPrinter... implement a Printer interface; new formats never touch existing code."},
+
+{c:"OCP", ty:"mcq", q:"What change would make this code OCP-compliant? (PaymentProcessor: if CreditCard ... else if PayPal)",
+ code:"class PaymentProcessor {\n  public void processPayment(String type) {\n    if (type.equals(\"CreditCard\")) { /* credit card */ }\n    else if (type.equals(\"PayPal\")) { /* paypal */ }\n  }\n}",
+ o:["Use an interface PaymentMethod and create classes for each payment type.","Add more payment types directly in processPayment.","Make processPayment final.","Keep all logic in one class."], a:0,
+ e:"Interface + one class per payment type = extend by adding classes, not by editing the processor."},
+
+{c:"OCP", ty:"mcq", q:"Identify how OCP can be applied here: (Logger: if File ... else if Console)",
+ code:"class Logger {\n  public void log(String type, String message) {\n    if (type.equals(\"File\"))    { /* log to file */ }\n    else if (type.equals(\"Console\")) { /* log to console */ }\n  }\n}",
+ o:["Create separate classes for each logging type implementing a Logger interface.","Keep adding more conditions for new logging types.","Use a switch statement for better readability.","Make the log method private."], a:0,
+ e:"FileLogger, ConsoleLogger... each implementing a Logger interface - new targets are new classes."},
+
+{c:"OCP", ty:"mcq", q:"What is the best OCP-compliant approach for the following code? (TaxCalculator: if US ... else if EU)",
+ code:"class TaxCalculator {\n  public double calculateTax(String region, double income) {\n    if (region.equals(\"US\")) return income * 0.3;\n    else if (region.equals(\"EU\")) return income * 0.25;\n  }\n}",
+ o:["Create an abstract class TaxCalculator and extend it for each region.","Keep adding conditions as regions increase.","Make calculateTax static.","The current implementation is already compliant."], a:0,
+ e:"USTaxCalculator, EUTaxCalculator extend the abstract calculator - extension without modification."},
+
+{c:"OCP", ty:"mcq", q:"Spot the OCP violation: (ShapeDrawer: if Circle ... else if Rectangle)",
+ code:"class ShapeDrawer {\n  public void drawShape(String shapeType) {\n    if (shapeType.equals(\"Circle\"))    { /* draw circle */ }\n    else if (shapeType.equals(\"Rectangle\")) { /* draw rectangle */ }\n  }\n}",
+ o:["Use an interface Shape with a draw method for each shape.","Add more conditions for new shapes.","Keep all logic in drawShape.","Make ShapeDrawer abstract."], a:0,
+ e:"Abstract Shape + Circle/Rectangle subclasses that know how to draw themselves."},
+
+{c:"OCP", ty:"mcq", q:"Which of the following demonstrates OCP adherence? (Alert interface with EmailAlert and SMSAlert)",
+ code:"interface Alert { void sendAlert(); }\nclass EmailAlert implements Alert { public void sendAlert(){ /* email alert */ } }\nclass SMSAlert implements Alert   { public void sendAlert(){ /* sms alert */ } }",
+ o:["This implementation correctly follows OCP.","EmailAlert should extend SMSAlert.","Alert interface should include more alert types.","Combine both EmailAlert and SMSAlert into one class."], a:0,
+ e:"New alert types arrive as new implementations of Alert - no existing code is modified."},
+
+{c:"OCP", ty:"mcq", q:"Refactor suggestion for OCP compliance: (MessageService: if Text ... else if Push)",
+ code:"class MessageService {\n  public void sendMessage(String type, String message) {\n    if (type.equals(\"Text\")) { /* text message */ }\n    else if (type.equals(\"Push\")) { /* push notification */ }\n  }\n}",
+ o:["Create classes TextMessageService and PushMessageService.","Add more conditions as message types grow.","Use a switch for better readability.","Make sendMessage final."], a:0,
+ e:"Extract a MessageService abstraction with one implementation per channel."},
+
+{c:"OCP", ty:"mcq", q:"OCP-compliant architecture for this code: (VehicleSpeedCalculator: if Car return 100 ... else if Bike return 50)",
+ code:"class VehicleSpeedCalculator {\n  public double calculateSpeed(String vehicleType) {\n    if (vehicleType.equals(\"Car\"))  return 100;\n    else if (vehicleType.equals(\"Bike\")) return 50;\n  }\n}",
+ o:["Create separate classes for each vehicle type implementing SpeedCalculator.","Use a HashMap for speed values.","Add more conditions as needed.","No changes required."], a:0,
+ e:"One calculator class per vehicle type behind a SpeedCalculator interface."},
+
+{c:"OCP", ty:"mcq", q:"Best practice for OCP adherence: (NotificationHandler: if Email ... else if SMS)",
+ code:"class NotificationHandler {\n  public void handleNotification(String type, String content) {\n    if (type.equals(\"Email\")) { /* email */ }\n    else if (type.equals(\"SMS\")) { /* sms */ }\n  }\n}",
+ o:["Implement an interface Notification with handleNotification in separate classes.","Add more conditions for new notification types.","Keep the logic centralized in one method.","Make NotificationHandler final."], a:0,
+ e:"Interface + one class per notification type = open for extension, closed for modification."}
+
+);
+
+/* ===== qdata3 ===== */
+// Part 3: LSP practice + ISP practice + DIP practice
+window.QUIZ_DATA = window.QUIZ_DATA || [];
+QUIZ_DATA.push(
+
+// ============ LSP PRACTICE (10) ============
+{c:"LSP", ty:"mcq", q:"Identify the LSP violation in the following code: (Bird.fly / Penguin throws UnsupportedOperationException)",
+ code:"class Bird { public void fly() { /* logic to fly */ } }\nclass Penguin extends Bird {\n  @Override public void fly() { throw new UnsupportedOperationException(\"Penguins can't fly\"); } }",
+ o:["No LSP violation, the code is fine.","The Penguin class violates LSP as it doesn't behave like a Bird.","The Bird class should be abstract.","Use an interface FlyingBird to separate flying birds from non-flying birds."], a:1,
+ e:"Any code expecting a Bird that flies breaks when it receives a Penguin - a violation. (The fix is option d: a Flyable interface.)"},
+
+{c:"LSP", ty:"mcq", q:"What change would make the following code adhere to LSP? (Rectangle / Square inheritance)",
+ code:"class Rectangle { private int width, height;\n  setWidth(w){this.width=w;} setHeight(h){this.height=h;} }\nclass Square extends Rectangle {\n  setWidth(w){ super.setWidth(w); super.setHeight(w); }\n  setHeight(h){ super.setWidth(h); super.setHeight(h); } }",
+ o:["Remove Square and use only Rectangle.","Ensure Square does not override setWidth and setHeight.","Create a separate Shape interface and remove inheritance.","No changes needed."], a:2,
+ e:"A Square is not a behaviorally-substitutable Rectangle; remove the bad inheritance (separate Shape abstraction or composition)."},
+
+{c:"LSP", ty:"mcq", q:"Identify how LSP is violated here: (PaymentMethod / CashPayment / CreditCardPayment throws)",
+ code:"class PaymentMethod { public void processPayment(double amount){ /* generic */ } }\nclass CashPayment extends PaymentMethod { /* works */ }\nclass CreditCardPayment extends PaymentMethod {\n  @Override public void processPayment(double amount){ throw new UnsupportedOperationException(\"Credit card not supported\"); } }",
+ o:["CashPayment violates LSP.","CreditCardPayment violates LSP due to UnsupportedOperationException.","PaymentMethod should be abstract.","No LSP violations present."], a:1,
+ e:"A substitute that throws where the base promises to work violates the contract."},
+
+{c:"LSP", ty:"mcq", q:"What adjustment can make the following code LSP-compliant? (Engine / ElectricEngine / BrokenEngine throws RuntimeException)",
+ code:"class Engine { public void start(){ /* generic start */ } }\nclass ElectricEngine extends Engine { @Override public void start(){ /* electric */ } }\nclass BrokenEngine extends Engine { @Override public void start(){ throw new RuntimeException(\"Engine is broken\"); } }",
+ o:["Make Engine an interface and separate broken functionality.","Remove BrokenEngine.","Keep BrokenEngine as it is.","Implement an isOperational check."], a:1,
+ e:"A 'broken' engine is not a valid substitute for a working Engine; removing it from the hierarchy restores substitutability."},
+
+{c:"LSP", ty:"mcq", q:"Identify the issue regarding LSP: (Document / ReadOnlyDocument throws on print)",
+ code:"class Document { public void print(){ /* print */ } }\nclass ReadOnlyDocument extends Document {\n  @Override public void print(){ throw new UnsupportedOperationException(\"Read-only document cannot be printed\"); } }",
+ o:["Document should not be extended by ReadOnlyDocument.","ReadOnlyDocument correctly extends Document.","Use an interface to separate read-only behavior.","No changes needed."], a:0,
+ e:"Client code holding a Document expects print() to work; ReadOnlyDocument breaks that expectation."},
+
+{c:"LSP", ty:"mcq", q:"How can LSP be upheld in this code? (Animal / MuteAnimal throws on makeSound)",
+ code:"class Animal { public void makeSound(){ System.out.println(\"Some generic animal sound\"); } }\nclass MuteAnimal extends Animal {\n  @Override public void makeSound(){ throw new UnsupportedOperationException(\"This animal is mute\"); } }",
+ o:["Remove MuteAnimal or change its inheritance.","Keep MuteAnimal as it is.","Add a canMakeSound property.","Make Animal abstract."], a:0,
+ e:"Do not force a mute animal into the sound-making hierarchy; restructure the inheritance."},
+
+{c:"LSP", ty:"mcq", q:"Which option best resolves the LSP violation? (Car / SelfDrivingCar throws on drive)",
+ code:"class Car { public void drive(){ /* manual driving */ } }\nclass SelfDrivingCar extends Car {\n  @Override public void drive(){ throw new UnsupportedOperationException(\"Self-driving car cannot be driven manually\"); } }",
+ o:["SelfDrivingCar should implement a different interface.","Remove SelfDrivingCar.","No changes needed.","Make drive method abstract."], a:0,
+ e:"Self-driving is a different capability - model it with its own interface instead of breaking Car's contract."},
+
+{c:"LSP", ty:"mcq", q:"What modification ensures LSP compliance? (Appliance / BrokenAppliance throws on turnOn)",
+ code:"class Appliance { public void turnOn(){ /* turn on */ } }\nclass BrokenAppliance extends Appliance {\n  @Override public void turnOn(){ throw new UnsupportedOperationException(\"Cannot turn on broken appliance\"); } }",
+ o:["Remove BrokenAppliance or change its relationship.","Add a property to check if the appliance is functional.","Keep BrokenAppliance as it is.","Make turnOn final."], a:0,
+ e:"A broken appliance cannot substitute a working one; change the model instead of throwing."},
+
+{c:"LSP", ty:"mcq", q:"Identify the correct LSP-compliant design: (Printer interface / StandardPrinter / NullPrinter throws)",
+ code:"interface Printer { void print(); }\nclass StandardPrinter implements Printer { public void print(){ System.out.println(\"Printing document\"); } }\nclass NullPrinter implements Printer { public void print(){ throw new UnsupportedOperationException(\"Cannot print\"); } }",
+ o:["Use NullPrinter as a decorator instead of implementing Printer.","Remove NullPrinter.","NullPrinter correctly follows LSP.","No changes needed."], a:0,
+ e:"A null/no-op printer should be a harmless no-op (Null Object pattern), not an exception thrower in the Printer role."},
+
+{c:"LSP", ty:"mcq", q:"Best LSP-compliant approach: (Vehicle.startEngine / Bicycle throws UnsupportedOperationException)",
+ code:"class Vehicle { public void startEngine(){ /* start engine */ } }\nclass Bicycle extends Vehicle {\n  @Override public void startEngine(){ throw new UnsupportedOperationException(\"Bicycles do not have engines\"); } }",
+ o:["Bicycle should not extend Vehicle.","Keep Bicycle as it is.","Add an isMotorized property.","Make startEngine final."], a:0,
+ e:"A bicycle is not a valid substitute for a vehicle-with-engine; remove the inheritance or split capabilities."},
+
+// ============ ISP PRACTICE (10) ============
+{c:"ISP", ty:"mcq", q:"Identify the ISP violation in the following code: (Worker: work, eat / RobotWorker throws on eat)",
+ code:"interface Worker { void work(); void eat(); }\nclass HumanWorker implements Worker { /* implements both */ }\nclass RobotWorker implements Worker {\n  public void work(){ /* works */ }\n  public void eat(){ throw new UnsupportedOperationException(\"Robots do not eat\"); } }",
+ o:["No violation, the code is fine.","RobotWorker violates ISP as it implements a method it doesn't need.","Worker should be split into Workable and Eatable interfaces.","HumanWorker should not implement Worker."], a:1,
+ e:"The fat Worker interface forces RobotWorker to implement eat() it will never use."},
+
+{c:"ISP", ty:"mcq", q:"What change would make the following code comply with ISP? (Printer: printDocument, scanDocument / BasicPrinter throws on scan)",
+ code:"interface Printer { void printDocument(); void scanDocument(); }\nclass BasicPrinter implements Printer {\n  public void printDocument(){ /* prints */ }\n  public void scanDocument(){ throw new UnsupportedOperationException(\"Basic printer cannot scan\"); } }",
+ o:["Split Printer into Printable and Scannable interfaces.","Keep Printer as it is.","Make BasicPrinter abstract.","Add more methods to Printer."], a:0,
+ e:"Splitting by capability lets BasicPrinter implement only Printable."},
+
+{c:"ISP", ty:"mcq", q:"Identify how ISP is violated: (Appliance: turnOn, setTemperature / Fan throws on setTemperature)",
+ code:"interface Appliance { void turnOn(); void setTemperature(int temp); }\nclass Fan implements Appliance {\n  public void turnOn(){ /* on */ }\n  public void setTemperature(int temp){ throw new UnsupportedOperationException(\"Fan cannot set temperature\"); } }",
+ o:["No ISP violation.","Fan violates ISP as it implements unnecessary methods.","Appliance should be separated into Switchable and TemperatureControllable interfaces.","turnOn should be abstract."], a:2,
+ e:"Fans switch on/off but don't control temperature - split the interface by capability."},
+
+{c:"ISP", ty:"mcq", q:"Which refactor would make this code ISP-compliant? (Vehicle: drive, fly / Car throws on fly)",
+ code:"interface Vehicle { void drive(); void fly(); }\nclass Car implements Vehicle {\n  public void drive(){ /* drives */ }\n  public void fly(){ throw new UnsupportedOperationException(\"Car cannot fly\"); } }",
+ o:["Keep Vehicle as it is.","Split Vehicle into Drivable and Flyable interfaces.","Make Car abstract.","Add more vehicles to Vehicle."], a:1,
+ e:"Drivable for cars, Flyable for planes; a flying car can implement both."},
+
+{c:"ISP", ty:"mcq", q:"How can the following code be improved for ISP? (SmartDevice: connectToWiFi, displayTime / SmartSpeaker throws on displayTime)",
+ code:"interface SmartDevice { void connectToWiFi(); void displayTime(); }\nclass SmartSpeaker implements SmartDevice {\n  public void connectToWiFi(){ /* connects */ }\n  public void displayTime(){ throw new UnsupportedOperationException(\"Smart speaker does not display time\"); } }",
+ o:["No changes needed.","Separate SmartDevice into Connectable and Displayable interfaces.","Add more features to SmartDevice.","Make SmartSpeaker extend a different interface."], a:1,
+ e:"Split by client need: connectivity vs display capabilities."},
+
+{c:"ISP", ty:"mcq", q:"Spot the ISP violation in this code: (Worker: work, takeBreak, manage / Developer throws on manage)",
+ code:"interface Worker { void work(); void takeBreak(); void manage(); }\nclass Manager implements Worker { /* implements all */ }\nclass Developer implements Worker {\n  public void work(){ /* works */ } public void takeBreak(){ /* breaks */ }\n  public void manage(){ throw new UnsupportedOperationException(\"Developer cannot manage\"); } }",
+ o:["Keep Worker as it is.","Split Worker into Workable, Breakable, and Manageable interfaces.","Remove Developer class.","No ISP violation."], a:1,
+ e:"Managing is a role only some workers perform - segregate it."},
+
+{c:"ISP", ty:"mcq", q:"Identify the ISP issue here: (Animal: eat, swim / Eagle throws on swim)",
+ code:"interface Animal { void eat(); void swim(); }\nclass Dog implements Animal { /* does both */ }\nclass Eagle implements Animal {\n  public void eat(){ /* eats */ }\n  public void swim(){ throw new UnsupportedOperationException(\"Eagles do not swim\"); } }",
+ o:["No violation, code is fine.","Animal should be split into Eatable and Swimmable interfaces.","Eagle should not implement Animal.","Make swim final."], a:1,
+ e:"Not all animals swim - segregate the capabilities."},
+
+{c:"ISP", ty:"mcq", q:"Which of the following changes would best adhere to ISP? (MediaPlayer: playAudio, playVideo / AudioPlayer throws on playVideo)",
+ code:"interface MediaPlayer { void playAudio(); void playVideo(); }\nclass AudioPlayer implements MediaPlayer {\n  public void playAudio(){ /* plays */ }\n  public void playVideo(){ throw new UnsupportedOperationException(\"Audio player cannot play video\"); } }",
+ o:["No changes needed.","Split MediaPlayer into AudioPlayable and VideoPlayable interfaces.","Add more methods to MediaPlayer.","Make AudioPlayer abstract."], a:1,
+ e:"Audio devices implement AudioPlayable only; video devices add VideoPlayable."},
+
+{c:"ISP", ty:"mcq", q:"How to make this code follow ISP? (MultiFunctionPrinter: print, fax, scan / SimplePrinter throws on fax and scan)",
+ code:"interface MultiFunctionPrinter { void print(); void fax(); void scan(); }\nclass SimplePrinter implements MultiFunctionPrinter {\n  public void print(){ /* prints */ }\n  public void fax(){ throw new UnsupportedOperationException(\"Simple printer cannot fax\"); }\n  public void scan(){ throw new UnsupportedOperationException(\"Simple printer cannot scan\"); } }",
+ o:["Keep MultiFunctionPrinter as it is.","Split MultiFunctionPrinter into Printable, Faxable, and Scannable interfaces.","Make SimplePrinter final.","Add more functionalities to MultiFunctionPrinter."], a:1,
+ e:"The textbook ISP fix: three small interfaces; a multifunction printer can implement all three."},
+
+{c:"ISP", ty:"mcq", q:"Best practice for ISP: (Tool: cut, drill / Cutter throws on drill)",
+ code:"interface Tool { void cut(); void drill(); }\nclass Cutter implements Tool {\n  public void cut(){ /* cuts */ }\n  public void drill(){ throw new UnsupportedOperationException(\"Cutter cannot drill\"); } }",
+ o:["No changes needed.","Split Tool into Cuttable and Drillable interfaces.","Make Cutter extend a different interface.","Add more methods to Tool."], a:1,
+ e:"One interface per capability; combine only where the capability truly exists."},
+
+// ============ DIP PRACTICE (10) ============
+{c:"DIP", ty:"mcq", q:"Identify the DIP violation in the following code: (Switch holds a concrete Light)",
+ code:"class Light { public void turnOn(){ /* light on */ } }\nclass Switch {\n  private Light light;\n  public Switch(Light light){ this.light = light; }\n  public void operate(){ light.turnOn(); } }",
+ o:["No violation, the code is correct.","Switch should depend on an interface instead of Light.","Light should extend Switch.","Keep the classes as they are."], a:1,
+ e:"The high-level Switch depends on the concrete Light class. Introduce a Switchable abstraction both depend on."},
+
+{c:"DIP", ty:"mcq", q:"Which refactor would best adhere to DIP? (Computer creates its own Keyboard)",
+ code:"class Keyboard { public void type(){ /* typing */ } }\nclass Computer {\n  private Keyboard keyboard;\n  public Computer(){ keyboard = new Keyboard(); } }",
+ o:["Inject Keyboard through the constructor of Computer.","Keep Computer as it is.","Make Keyboard abstract.","Add more dependencies to Computer."], a:0,
+ e:"'new' inside the class hard-codes the dependency; inject it from outside so it can be replaced."},
+
+{c:"DIP", ty:"mcq", q:"Spot the DIP issue in this code: (Application news up a Database)",
+ code:"class Database { public void connect(){ /* connect */ } }\nclass Application {\n  private Database database;\n  public Application(){ this.database = new Database(); }\n  public void run(){ database.connect(); } }",
+ o:["No issues; the code is compliant.","Application should depend on an abstraction of Database.","Database should implement Application.","Make Application static."], a:1,
+ e:"Business logic (Application) names a technical detail (Database). Depend on a DataStore abstraction instead."},
+
+{c:"DIP", ty:"mcq", q:"How to make this code adhere to DIP? (Notification depends on concrete EmailService)",
+ code:"class EmailService { public void sendEmail(){ /* send */ } }\nclass Notification {\n  private EmailService emailService;\n  public Notification(EmailService emailService){ this.emailService = emailService; }\n  public void notifyUser(){ emailService.sendEmail(); } }",
+ o:["Change EmailService to an interface and implement it in Notification.","Inject EmailService through an interface.","Keep Notification as it is.","Make sendEmail method static."], a:1,
+ e:"The injection direction is right, but it must inject an abstraction (MessageService interface), not the concrete class."},
+
+{c:"DIP", ty:"mcq", q:"Identify the best approach for DIP compliance: (Processor news up a Logger)",
+ code:"class Logger { public void log(String message){ /* log */ } }\nclass Processor {\n  private Logger logger = new Logger();\n  public void process(){ logger.log(\"Processing data\"); } }",
+ o:["Create an ILogger interface and depend on it.","Keep Processor as it is.","Make Logger abstract.","Add more methods to Logger."], a:0,
+ e:"Define the logging abstraction the processor needs; concrete loggers plug in from outside."},
+
+{c:"DIP", ty:"mcq", q:"What change can be made for DIP? (Computer news up a PowerSupply)",
+ code:"class PowerSupply { public void providePower(){ /* power */ } }\nclass Computer {\n  private PowerSupply powerSupply;\n  public Computer(){ powerSupply = new PowerSupply(); } }",
+ o:["Introduce an interface for PowerSupply and use dependency injection.","Keep Computer as it is.","Make PowerSupply abstract.","Add more dependencies to Computer."], a:0,
+ e:"Abstraction + injection = the Computer works with any power source."},
+
+{c:"DIP", ty:"mcq", q:"How does the following code violate DIP? (MusicPlayer depends on concrete Speaker)",
+ code:"class Speaker { public void playSound(){ /* play */ } }\nclass MusicPlayer {\n  private Speaker speaker;\n  public MusicPlayer(Speaker speaker){ this.speaker = speaker; }\n  public void play(){ speaker.playSound(); } }",
+ o:["MusicPlayer should depend on an abstraction of Speaker.","Speaker should extend MusicPlayer.","Make playSound final.","No DIP violation."], a:0,
+ e:"Even constructor-injected, the dependency is a concrete class; DIP wants an IAudioOutput abstraction."},
+
+{c:"DIP", ty:"mcq", q:"Which refactor would resolve the DIP violation? (DocumentEditor news up a TextPrinter)",
+ code:"class TextPrinter { public void printText(String text){ /* print */ } }\nclass DocumentEditor {\n  private TextPrinter printer = new TextPrinter();\n  public void edit(){ printer.printText(\"Editing document\"); } }",
+ o:["Depend on an IPrinter interface and inject it.","Keep DocumentEditor as it is.","Make TextPrinter final.","Add more printing methods."], a:0,
+ e:"The editor should know only 'something that can print', supplied from outside."},
+
+{c:"DIP", ty:"mcq", q:"Identify the correct way to implement DIP: (Flashlight news up a Battery)",
+ code:"class Battery { public void supplyPower(){ /* power */ } }\nclass Flashlight {\n  private Battery battery;\n  public Flashlight(){ this.battery = new Battery(); }\n  public void turnOn(){ battery.supplyPower(); } }",
+ o:["Introduce an IPowerSource interface and inject it.","Keep Flashlight as it is.","Make Battery final.","Add more methods to Battery."], a:0,
+ e:"Abstract the power source and inject it; the flashlight then works with any power source."},
+
+{c:"DIP", ty:"mcq", q:"Best refactor for DIP adherence: (SecuritySystem news up an Alarm)",
+ code:"class Alarm { public void trigger(){ /* trigger */ } }\nclass SecuritySystem {\n  private Alarm alarm;\n  public SecuritySystem(){ this.alarm = new Alarm(); }\n  public void activate(){ alarm.trigger(); } }",
+ o:["Depend on an IAlarm interface and inject it.","Make Alarm abstract.","Keep SecuritySystem as it is.","Add more security features to Alarm."], a:0,
+ e:"The security system should trigger 'some alarm abstraction', not a hard-coded concrete Alarm."}
+
+);
+
+/* ===== qdata4 ===== */
+// Part 4: SOLID question bank (MCQ + True/False)
+window.QUIZ_DATA = window.QUIZ_DATA || [];
+QUIZ_DATA.push(
+
+{c:"SOLID Bank", ty:"mcq", q:"Which principle states that classes should have only one responsibility?",
+ o:["Single Responsibility Principle","Open-Closed Principle","Liskov Substitution Principle","Interface Segregation Principle"], a:0,
+ e:"S = Single Responsibility."},
+
+{c:"SOLID Bank", ty:"mcq", q:"Which principle encourages designing classes that are open for extension but closed for modification?",
+ o:["Single Responsibility Principle","Open-Closed Principle","Liskov Substitution Principle","Interface Segregation Principle"], a:1,
+ e:"O = Open/Closed."},
+
+{c:"SOLID Bank", ty:"mcq", q:"What does the Liskov Substitution Principle state?",
+ o:["Subtypes should be substitutable for their base types without altering program correctness","Classes should have only one reason to change","Interfaces should be small and focused","High-level modules should not depend on low-level modules"], a:0,
+ e:"The formal LSP statement by Barbara Liskov."},
+
+{c:"SOLID Bank", ty:"mcq", q:"Which principle promotes splitting large interfaces into smaller, more specific ones?",
+ o:["Single Responsibility Principle","Open-Closed Principle","Liskov Substitution Principle","Interface Segregation Principle"], a:3,
+ e:"I = Interface Segregation."},
+
+{c:"SOLID Bank", ty:"mcq", q:"What is the main idea behind the Dependency Inversion Principle?",
+ o:["Classes should have only one responsibility","Code should be open for extension but closed for modification","High-level modules should not depend on low-level modules. Both should depend on abstractions.","Interfaces should be small and focused"], a:2,
+ e:"DIP turns both layers toward abstractions."},
+
+{c:"SOLID Bank", ty:"mcq", q:"What does the acronym SOLID stand for in software engineering principles?",
+ o:["Secure, Object-Oriented, Linked, Independent, Distributed","Single Responsibility, Open-Closed, Liskov Substitution, Interface Segregation, Dependency Inversion","Scalable, Optimized, Layered, Iterative, Deployable","Standardized, Object-Oriented, Loosely Coupled, Intuitive, Documented"], a:1,
+ e:"Memorize the five names - a guaranteed exam point."},
+
+{c:"SOLID Bank", ty:"mcq", q:"Which SOLID principle aims to reduce the impact of changes by ensuring that modifications to one module do not affect others?",
+ o:["Single Responsibility Principle","Open/Closed Principle","Liskov Substitution Principle","Dependency Inversion Principle"], a:3,
+ e:"DIP reduces coupling between modules, so a change in one module does not ripple into others."},
+
+{c:"SOLID Bank", ty:"mcq", q:"What issue does the Interface Segregation Principle address?",
+ o:["Classes having too many responsibilities.","Subclasses not adhering to the behavior of their base classes.","Clients being forced to depend on methods they don't use.","High-level modules depending directly on low-level modules."], a:2,
+ e:"ISP exists to stop clients depending on methods they never call."},
+
+{c:"SOLID Bank", ty:"mcq", q:"Which SOLID principle emphasizes that a class should only have one specific responsibility?",
+ o:["Single Responsibility Principle","Open/Closed Principle","Liskov Substitution Principle","Interface Segregation Principle"], a:0,
+ e:"SRP again - know it in all phrasings."},
+
+{c:"SOLID Bank", ty:"mcq", q:"Which SOLID principle encourages designing modules to be open for extension but closed for modification?",
+ o:["Single Responsibility Principle","Open/Closed Principle","Liskov Substitution Principle","Interface Segregation Principle"], a:1,
+ e:"OCP."},
+
+{c:"SOLID Bank", ty:"mcq", q:"The Liskov Substitution Principle states that:",
+ o:["Interfaces should be small and focused.","Subtypes should be substitutable for their base types without altering program correctness.","Classes should have only one reason to change.","High-level modules should not depend on low-level modules."], a:1,
+ e:"LSP = substitutability without altering correctness."},
+
+{c:"SOLID Bank", ty:"mcq", q:"What issue does the Interface Segregation Principle aim to solve?",
+ o:["Classes having too many methods.","Tight coupling between classes.","Clients depending on methods they don't use.","Circular dependencies between modules."], a:2,
+ e:"Fat interfaces force unused dependencies on clients."},
+
+{c:"SOLID Bank", ty:"mcq", q:"According to the Dependency Inversion Principle:",
+ o:["Both high-level and low-level modules should depend on abstractions.","Concrete classes should depend on abstract classes.","Abstractions should not depend on details.","Details should depend on abstractions."], a:0,
+ e:"The headline rule: both levels depend on abstractions (the details-depend-on-abstractions clause supports it)."},
+
+{c:"SOLID Bank", ty:"mcq", q:"Which SOLID principle advocates separating interfaces into smaller, more specific ones?",
+ o:["Single Responsibility Principle","Open-Closed Principle","Liskov Substitution Principle","Interface Segregation Principle"], a:3,
+ e:"ISP."},
+
+{c:"SOLID Bank", ty:"mcq", q:"What does the acronym 'SOLID' represent in the context of software design principles?",
+ o:["A set of five design principles aimed at making software more understandable, flexible, and maintainable.","A specific design pattern for creating complex objects.","A type of programming language used for enterprise applications.","A methodology for managing software development projects."], a:0,
+ e:"SOLID = five design principles, not a pattern or a language."},
+
+{c:"SOLID Bank", ty:"mcq", q:"Which SOLID principle is violated if a class has more than one reason to change?",
+ o:["Open/Closed Principle","Single Responsibility Principle","Liskov Substitution Principle","Dependency Inversion Principle"], a:1,
+ e:"More than one reason to change = SRP violated."},
+
+{c:"SOLID Bank", ty:"mcq", q:"What is the primary goal of the Liskov Substitution Principle?",
+ o:["To ensure that all classes have a single responsibility.","To guarantee that subtypes can be used in place of their base types without causing errors.","To define a template for an algorithm.","To control access to an object."], a:1,
+ e:"Safe substitution is the goal."},
+
+{c:"SOLID Bank", ty:"mcq", q:"According to the Dependency Inversion Principle, what should high-level modules depend on?",
+ o:["Low-level modules directly.","Abstractions, not concretions.","Concrete implementations of other modules.","The database layer."], a:1,
+ e:"'Depend on abstractions, not concretions' - the DIP slogan."},
+
+{c:"SOLID Bank", ty:"mcq", q:"What does the 'S' in SOLID stand for?",
+ o:["Single Responsibility Principle","System Design Principle","Structured Programming","Software Reusability"], a:0,
+ e:"S = Single Responsibility."},
+
+{c:"SOLID Bank", ty:"mcq", q:"Which of the following is an example of violating the Liskov Substitution Principle?",
+ o:["Using inheritance to extend a class.","Creating an abstract class that is not implemented by any subclass.","Subclass modifying the behavior of a method such that it cannot be used in place of its parent class.","Implementing an interface with an abstract class."], a:2,
+ e:"If the subclass can no longer stand in for the parent, LSP is broken."},
+
+{c:"SOLID Bank", ty:"mcq", q:"Which of the following best describes the Dependency Inversion Principle?",
+ o:["High-level modules should not depend on low-level modules. Both should depend on abstractions.","Classes should be designed to be open for extension but closed for modification.","Subtypes must be substitutable for their base types.","One class should have only one reason to change."], a:0,
+ e:"DIP definition."},
+
+{c:"SOLID Bank", ty:"mcq", q:"Which SOLID principle is primarily aimed at reducing the size of large interfaces?",
+ o:["Single Responsibility Principle","Interface Segregation Principle","Liskov Substitution Principle","Dependency Inversion Principle"], a:1,
+ e:"ISP shrinks interfaces."},
+
+{c:"SOLID Bank", ty:"mcq", q:"Which of the following is an example of violating the Open/Closed Principle?",
+ o:["Using inheritance to extend a class's functionality.","Modifying existing classes to add new features.","Implementing an interface to add new behaviors.","Using abstract classes for common functionality."], a:1,
+ e:"OCP violation = editing existing classes to add features instead of extending."},
+
+{c:"SOLID Bank", ty:"mcq", q:"Which principle in SOLID suggests that a class should only have one reason to change?",
+ o:["Open/Closed Principle","Liskov Substitution Principle","Single Responsibility Principle","Dependency Inversion Principle"], a:2,
+ e:"SRP's alternative definition."},
+
+{c:"SOLID Bank", ty:"mcq", q:"What does the Open/Closed Principle advocate?",
+ o:["Classes should be open for modification but closed for extension","Classes should be closed for modification but open for extension","Classes should be open for both extension and modification","Classes should be closed for both extension and modification"], a:1,
+ e:"Watch the word order - the exam loves to swap it."},
+
+{c:"SOLID Bank", ty:"mcq", q:"Which SOLID principle aims to ensure that subclasses can be used interchangeably with their base classes without affecting the functionality?",
+ o:["Single Responsibility Principle","Liskov Substitution Principle","Interface Segregation Principle","Dependency Inversion Principle"], a:1,
+ e:"LSP = interchangeability."},
+
+{c:"SOLID Bank", ty:"mcq", q:"The Interface Segregation Principle encourages:",
+ o:["Combining multiple interfaces into one large interface","Splitting large interfaces into smaller, more specific ones","Using abstract classes instead of interfaces","Creating interfaces that are not used by any class"], a:1,
+ e:"Split, never merge."},
+
+{c:"SOLID Bank", ty:"mcq", q:"What is the primary objective of the Dependency Inversion Principle?",
+ o:["High-level modules should depend on low-level modules","Low-level modules should depend on high-level modules","Both high-level and low-level modules should depend on abstractions","Both high-level and low-level modules should be tightly coupled"], a:2,
+ e:"Both sides depend on abstractions."},
+
+{c:"SOLID Bank", ty:"mcq", q:"Which of the following correctly defines the SOLID acronym?",
+ o:["Scalable, Optimized, Layered, Independent, Dynamic","Single Responsibility, Open/Closed, Liskov Substitution, Interface Segregation, Dependency Inversion","Secure, Object-Oriented, Linked, Independent, Distributed","Structured, Object-Oriented, Loosely Coupled, Intuitive, Documented"], a:1,
+ e:"Same answer every time it appears."},
+
+{c:"SOLID Bank", ty:"mcq", q:"Which SOLID principle is violated if a class implements methods that it does not use?",
+ o:["Open/Closed Principle","Liskov Substitution Principle","Interface Segregation Principle","Dependency Inversion Principle"], a:2,
+ e:"Implementing unused methods = fat interface = ISP violation."},
+
+{c:"SOLID Bank", ty:"mcq", q:"What is an example of adhering to the Dependency Inversion Principle?",
+ o:["A database connection class depends on a concrete implementation","A logging class depends on a specific file system class","A payment processing class depends on an abstract payment interface","A user authentication class directly accesses the database"], a:2,
+ e:"Depending on an abstract payment interface is DIP in action."},
+
+{c:"SOLID Bank", ty:"mcq", q:"Which principle focuses on ensuring that a class has only one responsibility or reason to change?",
+ o:["Open/Closed Principle","Single Responsibility Principle","Interface Segregation Principle","Liskov Substitution Principle"], a:1,
+ e:"SRP."},
+
+{c:"SOLID Bank", ty:"mcq", q:"Which principle would you apply to avoid a class from changing frequently due to the introduction of new features?",
+ o:["Open/Closed Principle","Single Responsibility Principle","Interface Segregation Principle","Dependency Inversion Principle"], a:0,
+ e:"OCP: extend instead of modifying, so the class stops churning."},
+
+// ---- SOLID True/False (deduplicated from the bank) ----
+{c:"SOLID Bank", ty:"tf", q:"The Open/Closed Principle states that software entities should be open for extension but closed for modification.", a:0, e:"True."},
+
+{c:"SOLID Bank", ty:"tf", q:"The Single Responsibility Principle promotes having multiple reasons for a class to change.", a:1, e:"False - exactly one reason to change."},
+
+{c:"SOLID Bank", ty:"tf", q:"The Liskov Substitution Principle ensures that subtypes can replace their base types without altering program correctness.", a:0, e:"True."},
+
+{c:"SOLID Bank", ty:"tf", q:"The Interface Segregation Principle encourages large, monolithic interfaces.", a:1, e:"False - the opposite: small and specific."},
+
+{c:"SOLID Bank", ty:"tf", q:"The Dependency Inversion Principle aims to reduce coupling between high-level and low-level modules.", a:0, e:"True - they meet at abstractions."},
+
+{c:"SOLID Bank", ty:"tf", q:"The SOLID principles can be applied to any object-oriented programming language.", a:0, e:"True."},
+
+{c:"SOLID Bank", ty:"tf", q:"The Open/Closed Principle promotes code reusability and maintainability.", a:0, e:"True."},
+
+{c:"SOLID Bank", ty:"tf", q:"The Liskov Substitution Principle states that subclasses must have more functionality than their base classes.", a:1, e:"False - LSP is about substitutability, not about having more functionality."},
+
+{c:"SOLID Bank", ty:"tf", q:"The Interface Segregation Principle helps to make interfaces more specific and reduces the coupling between classes.", a:0, e:"True."},
+
+{c:"SOLID Bank", ty:"tf", q:"The Dependency Inversion Principle states that high-level modules should directly depend on low-level modules.", a:1, e:"False - they should both depend on abstractions."},
+
+{c:"SOLID Bank", ty:"tf", q:"The SOLID principles are guidelines for writing more maintainable and flexible code.", a:0, e:"True - guidelines, not rules or patterns."},
+
+{c:"SOLID Bank", ty:"tf", q:"The Open-Closed Principle states that classes should be open for modification but closed for extension.", a:1, e:"False - reversed. Open for EXTENSION, closed for MODIFICATION."},
+
+{c:"SOLID Bank", ty:"tf", q:"The Liskov Substitution Principle helps to ensure the interchangeability of subclasses and their base classes.", a:0, e:"True."},
+
+{c:"SOLID Bank", ty:"tf", q:"The Dependency Inversion Principle promotes the use of abstractions over concrete implementations.", a:0, e:"True."},
+
+{c:"SOLID Bank", ty:"tf", q:"The Single Responsibility Principle means a class should have more than one reason to change.", a:1, e:"False - only one."},
+
+{c:"SOLID Bank", ty:"tf", q:"Good software design aims to reduce coupling and increase cohesion.", a:0, e:"True - low coupling, high cohesion is the goal."},
+
+{c:"SOLID Bank", ty:"tf", q:"The Single Responsibility Principle helps in making classes easier to test and understand.", a:0, e:"True."},
+
+{c:"SOLID Bank", ty:"tf", q:"The Open-Closed Principle discourages the use of abstract classes and interfaces.", a:1, e:"False - abstraction is exactly how you achieve OCP."},
+
+{c:"SOLID Bank", ty:"tf", q:"The Liskov Substitution Principle is important for ensuring that subclasses behave consistently with their base classes.", a:0, e:"True."},
+
+{c:"SOLID Bank", ty:"tf", q:"The Interface Segregation Principle suggests that clients should be forced to implement methods they don't use.", a:1, e:"False - ISP exists to prevent exactly that."},
+
+{c:"SOLID Bank", ty:"tf", q:"The Dependency Inversion Principle promotes loose coupling between modules.", a:0, e:"True."},
+
+{c:"SOLID Bank", ty:"tf", q:"The SOLID principles are specific design patterns that dictate how to write code.", a:1, e:"False - they are principles/guidelines, not design patterns."},
+
+{c:"SOLID Bank", ty:"tf", q:"Adhering to the SOLID principles generally leads to more maintainable and flexible software systems.", a:0, e:"True."},
+
+{c:"SOLID Bank", ty:"tf", q:"Liskov Substitution Principle allows using child classes interchangeably with parent classes without altering expected behavior.", a:0, e:"True."},
+
+{c:"SOLID Bank", ty:"tf", q:"The Interface Segregation Principle aims to combine several interfaces into one larger interface.", a:1, e:"False - it splits large interfaces."},
+
+{c:"SOLID Bank", ty:"tf", q:"The Open/Closed Principle requires modifying existing code to add new functionality.", a:1, e:"False - new functionality arrives by extension."},
+
+{c:"SOLID Bank", ty:"tf", q:"The Liskov Substitution Principle is concerned with the inheritance hierarchy and ensuring that derived classes can replace base classes without issues.", a:0, e:"True."},
+
+{c:"SOLID Bank", ty:"tf", q:"The Interface Segregation Principle aims to reduce the number of methods in an interface to make them more specific.", a:0, e:"True."},
+
+{c:"SOLID Bank", ty:"tf", q:"The Dependency Inversion Principle encourages both high-level and low-level modules to depend on abstractions rather than concrete implementations.", a:0, e:"True."},
+
+{c:"SOLID Bank", ty:"tf", q:"The Interface Segregation Principle suggests that interfaces should be large and cover all possible methods needed by any class.", a:1, e:"False - small, client-specific interfaces."},
+
+{c:"SOLID Bank", ty:"tf", q:"The Dependency Inversion Principle promotes direct dependency between high-level modules and low-level modules.", a:1, e:"False - dependency goes through abstractions."}
+
+);
+
+/* ===== qdata5 ===== */
+// Part 5: Design Patterns general + Singleton
+window.QUIZ_DATA = window.QUIZ_DATA || [];
+QUIZ_DATA.push(
+
+// ============ DESIGN PATTERNS - GENERAL ============
+{c:"Patterns", ty:"mcq", q:"Which type of design pattern deals with the creation of objects?",
+ o:["Creational Design Patterns","Structural Design Patterns","Behavioral Design Patterns","None of the above"], a:0,
+ e:"Creational = object creation (Singleton, Factory)."},
+
+{c:"Patterns", ty:"mcq", q:"Which of the following is NOT a benefit of using design patterns?",
+ o:["Reusability","Maintainability","Increased code complexity","Improved code understanding"], a:2,
+ e:"Patterns aim to manage complexity, not increase it."},
+
+{c:"Patterns", ty:"mcq", q:"Which type of design pattern primarily focuses on the communication and interaction between objects?",
+ o:["Creational Design Pattern","Structural Design Pattern","Behavioral Design Pattern","Concurrency Design Pattern"], a:2,
+ e:"Behavioral = how objects communicate (Observer, Command, Strategy)."},
+
+{c:"Patterns", ty:"mcq", q:"Which type of design pattern is most concerned with the creation of objects?",
+ o:["Creational Design Pattern","Structural Design Pattern","Behavioral Design Pattern","Concurrency Design Pattern"], a:0,
+ e:"Creational."},
+
+{c:"Patterns", ty:"mcq", q:"What are the three main categories of Design Patterns?",
+ o:["Simple, Complex, and Advanced","Abstract, Concrete, and Interface","Creational, Structural, and Behavioral","Static, Dynamic, and Runtime"], a:2,
+ e:"Memorize: Creational, Structural, Behavioral."},
+
+{c:"Patterns", ty:"mcq", q:"In the context of design patterns, what does 'coupling' refer to?",
+ o:["The degree to which a class adheres to the Single Responsibility Principle.","The ability of a system to handle changing requirements.","The level of interdependence between different classes or modules.","The process of adding new features to an existing class."], a:2,
+ e:"Coupling = how much modules depend on each other. Good design keeps it low."},
+
+{c:"Patterns", ty:"mcq", q:"How can design patterns be helpful in software development?",
+ o:["They eliminate the need for testing.","They guarantee bug-free code.","They provide proven solutions to recurring design problems, enhancing code readability and maintainability.","They automate the entire coding process."], a:2,
+ e:"Patterns are proven templates for recurring problems - they never replace testing."},
+
+{c:"Patterns", ty:"mcq", q:"Which of the following is NOT a type of design pattern category?",
+ o:["Creational","Structural","Behavioral","Abstract"], a:3,
+ e:"'Abstract' is not a category - the three are Creational, Structural, Behavioral."},
+
+{c:"Patterns", ty:"mcq", q:"Which of these patterns falls under the category of behavioral design patterns?",
+ o:["Adapter","Proxy","Facade","Observer"], a:3,
+ e:"Observer is behavioral; Adapter, Proxy, Facade are structural."},
+
+{c:"Patterns", ty:"mcq", q:"Design patterns are primarily used to:",
+ o:["Optimize algorithm performance","Solve recurring design problems in software development","Replace programming languages","Automate code writing"], a:1,
+ e:"Their purpose: recurring design problems."},
+
+{c:"Patterns", ty:"mcq", q:"Which type of design pattern focuses on creating objects?",
+ o:["Behavioral Design Pattern","Structural Design Pattern","Creational Design Pattern","Abstract Design Pattern"], a:2,
+ e:"Creational."},
+
+{c:"Patterns", ty:"mcq", q:"What is a major benefit of using design patterns in software development?",
+ o:["They guarantee bug-free code","They simplify coding by eliminating testing","They provide proven solutions to recurring design problems","They make software development faster"], a:2,
+ e:"Proven, tested solutions you don't have to invent again."},
+
+{c:"Patterns", ty:"mcq", q:"Which of the following is NOT a category of design patterns?",
+ o:["Creational","Structural","Behavioral","Functional"], a:3,
+ e:"'Functional' is not one of the three categories."},
+
+{c:"Patterns", ty:"mcq", q:"What does 'loose coupling' refer to in the context of design patterns?",
+ o:["Classes having fewer responsibilities","Reducing dependencies between classes","Using more interfaces than classes","Creating larger, more complex classes"], a:1,
+ e:"Loose coupling = classes depend on abstractions, not on each other's details."},
+
+{c:"Patterns", ty:"mcq", q:"Which of the following statements about design patterns is true?",
+ o:["Design patterns are concrete code implementations","Design patterns are flexible solutions to common problems","Design patterns must be used in every project","Design patterns are only applicable in object-oriented programming"], a:1,
+ e:"They are flexible templates, not copy-paste code - and not mandatory."},
+
+{c:"Patterns", ty:"mcq", q:"Which design pattern category is primarily focused on how objects interact and communicate?",
+ o:["Creational Design Pattern","Behavioral Design Pattern","Structural Design Pattern","Concurrency Design Pattern"], a:1,
+ e:"Behavioral."},
+
+{c:"Patterns", ty:"mcq", q:"What is the main purpose of a structural design pattern?",
+ o:["To manage object creation","To define how objects are composed to form larger structures","To ensure consistent object behavior","To handle algorithmic logic"], a:1,
+ e:"Structural = composition (Adapter, Decorator, Proxy, Facade)."},
+
+{c:"Patterns", ty:"mcq", q:"Which of the following best describes the concept of 'reusability' in design patterns?",
+ o:["Reusing the same object across different projects","Using a proven solution to a common design problem","Copying and pasting code from one project to another","Creating objects that never need modification"], a:1,
+ e:"Reusability = reusing the proven solution, not literal code."},
+
+{c:"Patterns", ty:"mcq", q:"What is the key reason to use a behavioral design pattern?",
+ o:["To optimize memory usage","To simplify object creation","To manage object communication and interaction","To enforce security in software"], a:2,
+ e:"Behavioral = communication/interaction."},
+
+{c:"Patterns", ty:"mcq", q:"Which of the following design pattern types is most concerned with the composition of classes and objects?",
+ o:["Behavioral Design Patterns","Structural Design Patterns","Creational Design Patterns","Factory Design Patterns"], a:1,
+ e:"Structural patterns compose classes/objects into bigger structures."},
+
+{c:"Patterns", ty:"mcq", q:"Which design pattern would you choose to simplify communication between multiple objects without them needing to know each other's details?",
+ o:["Singleton Pattern","Factory Pattern","Mediator Pattern","Builder Pattern"], a:2,
+ e:"Mediator centralizes communication so objects don't reference each other directly."},
+
+{c:"Patterns", ty:"mcq", q:"What is the primary focus of behavioral design patterns?",
+ o:["How objects are created","How objects communicate and behave","How objects are structured and composed","How data is stored and retrieved"], a:1,
+ e:"Communication and behavior."},
+
+{c:"Patterns", ty:"mcq", q:"In software design, a design pattern can be described as:",
+ o:["A ready-to-use code snippet","A reusable solution to a commonly occurring problem","A software testing methodology","A concrete implementation of a specific algorithm"], a:1,
+ e:"The definition to memorize."},
+
+{c:"Patterns", ty:"mcq", q:"Which of the following is a common misconception about design patterns?",
+ o:["Design patterns improve code maintainability","Design patterns provide flexible solutions","Design patterns eliminate the need for testing","Design patterns can reduce development time"], a:2,
+ e:"Nothing eliminates testing - this is the classic misconception."},
+
+{c:"Patterns", ty:"mcq", q:"Which type of design pattern would be most appropriate for handling multiple event listeners in a graphical user interface (GUI) application?",
+ o:["Creational Design Pattern","Structural Design Pattern","Observer Design Pattern","Prototype Design Pattern"], a:2,
+ e:"Observer = one source notifies many listeners - the GUI event model."},
+
+// ---- Design patterns T/F ----
+{c:"Patterns", ty:"tf", q:"A design pattern is a reusable solution to a commonly occurring problem in software design.", a:0, e:"True - the definition."},
+
+{c:"Patterns", ty:"tf", q:"All design patterns fall under the category of creational patterns.", a:1, e:"False - there are three categories: creational, structural, behavioral."},
+
+{c:"Patterns", ty:"tf", q:"Design patterns are specific coding algorithms that can be directly copied and pasted into any project.", a:1, e:"False - they are general templates to adapt, not copy-paste code."},
+
+{c:"Patterns", ty:"tf", q:"Understanding design patterns can enhance a developer's problem-solving skills and improve the overall quality of software design.", a:0, e:"True."},
+
+{c:"Patterns", ty:"tf", q:"Using design patterns can make it easier for developers to communicate with each other and understand each other's code.", a:0, e:"True - patterns are a shared vocabulary."},
+
+{c:"Patterns", ty:"tf", q:"All design patterns are equally applicable in every situation.", a:1, e:"False - each pattern fits specific problems."},
+
+{c:"Patterns", ty:"tf", q:"When used appropriately, Design Patterns can make software systems more flexible, maintainable, and efficient.", a:0, e:"True."},
+
+{c:"Patterns", ty:"tf", q:"A good understanding of design patterns can help developers to choose the appropriate solution for a given problem, and to write more efficient, reusable, and maintainable code.", a:0, e:"True."},
+
+{c:"Patterns", ty:"tf", q:"Structural design patterns deal with the communication between objects.", a:1, e:"False - structural patterns deal with composition; behavioral ones deal with communication."},
+
+{c:"Patterns", ty:"tf", q:"Understanding design patterns and SOLID principles can improve code maintainability and flexibility.", a:0, e:"True."},
+
+{c:"Patterns", ty:"tf", q:"A design pattern is a concrete, ready-to-use code snippet that can be applied to any project directly.", a:1, e:"False - a template to adapt."},
+
+{c:"Patterns", ty:"tf", q:"Design patterns can be combined to solve more complex design challenges.", a:0, e:"True."},
+
+{c:"Patterns", ty:"tf", q:"Design patterns always increase the complexity of a software project.", a:1, e:"False - used well, they organize and reduce complexity."},
+
+{c:"Patterns", ty:"tf", q:"Design patterns can help reduce code duplication.", a:0, e:"True."},
+
+{c:"Patterns", ty:"tf", q:"Behavioral design patterns are primarily concerned with object creation.", a:1, e:"False - that is creational."},
+
+{c:"Patterns", ty:"tf", q:"The use of design patterns always leads to more complex code.", a:1, e:"False."},
+
+{c:"Patterns", ty:"tf", q:"Structural design patterns are concerned with the composition of classes and objects.", a:0, e:"True."},
+
+{c:"Patterns", ty:"tf", q:"Design patterns are applicable only in object-oriented programming.", a:1, e:"False - the ideas apply beyond pure OOP."},
+
+{c:"Patterns", ty:"tf", q:"Understanding design patterns can improve the flexibility and maintainability of a software project.", a:0, e:"True."},
+
+{c:"Patterns", ty:"tf", q:"The purpose of a creational design pattern is to manage object communication.", a:1, e:"False - creational patterns manage object creation."},
+
+{c:"Patterns", ty:"tf", q:"The use of design patterns makes code easier to understand and modify.", a:0, e:"True."},
+
+{c:"Patterns", ty:"tf", q:"Design patterns eliminate the need for software testing.", a:1, e:"False - testing is still essential."},
+
+{c:"Patterns", ty:"tf", q:"Design patterns provide tested and proven solutions to common design problems.", a:0, e:"True."},
+
+{c:"Patterns", ty:"tf", q:"Behavioral patterns focus on how objects interact and communicate with each other.", a:0, e:"True."},
+
+{c:"Patterns", ty:"tf", q:"Structural patterns focus on optimizing the memory usage of objects.", a:1, e:"False - they focus on composition/structure."},
+
+{c:"Patterns", ty:"tf", q:"Creational patterns deal with the creation of object instances.", a:0, e:"True."},
+
+{c:"Patterns", ty:"tf", q:"Design patterns must always be used to write maintainable code.", a:1, e:"False - use them where they fit, not always."},
+
+{c:"Patterns", ty:"tf", q:"A deep understanding of design patterns can help in selecting appropriate solutions for specific problems.", a:0, e:"True."},
+
+{c:"Patterns", ty:"tf", q:"Design patterns provide guidelines on how to structure software but do not provide concrete code.", a:0, e:"True."},
+
+{c:"Patterns", ty:"tf", q:"The use of design patterns reduces the dependency between software components.", a:0, e:"True - e.g., factories and abstractions decouple clients."},
+
+{c:"Patterns", ty:"tf", q:"Design patterns can be useful for both large and small software projects.", a:0, e:"True."},
+
+// ============ SINGLETON ============
+{c:"Singleton", ty:"mcq", q:"Which of the following best describes the Singleton design pattern?",
+ o:["A pattern that restricts the instantiation of a class to a single instance and provides global access to that instance","A pattern that ensures multiple instances of a class can be created","A pattern that allows objects with incompatible interfaces to collaborate","A pattern that defines a family of related objects"], a:0,
+ e:"One instance + global access point - the Singleton definition."},
+
+{c:"Singleton", ty:"mcq", q:"What problem does the Singleton pattern solve?",
+ o:["The need to create objects with many optional fields","The need to ensure only one instance of a class exists in the system","The need to separate the creation of an object from its representation","The need to provide a common interface for different classes"], a:1,
+ e:"Exactly one instance (e.g., one logger, one config manager)."},
+
+{c:"Singleton", ty:"mcq", q:"Which of the following is a key characteristic of the Singleton pattern?",
+ o:["It allows multiple instances of a class to be created","It provides a way to dynamically add behaviors to an object","It ensures that a class has only one instance and provides a global point of access to that instance","It allows objects to be created without specifying their exact class"], a:2,
+ e:"Single instance + global access."},
+
+{c:"Singleton", ty:"mcq", q:"Which of the following scenarios is best suited for the Singleton pattern?",
+ o:["A class that represents different types of vehicles","A configuration manager that holds global application settings","A class that creates different types of user interfaces","A database query executor that handles multiple connections"], a:1,
+ e:"One shared settings object = classic Singleton."},
+
+{c:"Singleton", ty:"mcq", q:"In which of the following cases would the Singleton pattern NOT be appropriate?",
+ o:["Managing a single instance of a logging service","Controlling access to a shared resource, such as a file system","Creating multiple instances of a class to handle different tasks","Managing a single instance of a configuration file reader"], a:2,
+ e:"If you need many instances, Singleton is the wrong tool."},
+
+{c:"Singleton", ty:"mcq", q:"What is the main difference between Eager and Lazy initialization in the Singleton pattern?",
+ o:["Eager initialization creates the instance at application startup, while Lazy initialization creates it on demand","Lazy initialization creates the instance at application startup, while Eager initialization creates it on demand","Eager initialization allows multiple instances, while Lazy initialization ensures only one instance","Lazy initialization is more memory efficient than Eager initialization"], a:0,
+ e:"Eager = created at startup/class-load; Lazy = created on first getInstance() call."},
+
+{c:"Singleton", ty:"mcq", q:"Which method is commonly used to access the instance of a Singleton class?",
+ o:["newInstance()","getObject()","getInstance()","createObject()"], a:2,
+ e:"getInstance() - the standard Singleton accessor."},
+
+{c:"Singleton", ty:"mcq", q:"What potential issue can arise when using a Singleton pattern in a multithreaded environment?",
+ o:["The instance may be created multiple times if proper synchronization is not applied","The Singleton class cannot be inherited","The Singleton instance may be garbage collected","The Singleton pattern violates the Open/Closed Principle"], a:0,
+ e:"Two threads can both see instance == null and each create one - synchronization is needed."},
+
+{c:"Singleton", ty:"mcq", q:"Which of the following is NOT a step in implementing the Singleton pattern?",
+ o:["Make the constructor of the class private","Create a static method to return the instance of the class","Create a public static variable to hold the instance","Use synchronization to handle multithreading issues"], a:2,
+ e:"The instance reference is kept PRIVATE static; the public part is only the getInstance() method."},
+
+{c:"Singleton", ty:"mcq", q:"When would you use the Singleton pattern?",
+ o:["When you need to ensure that a class has multiple instances","When you need a global point of access to an object","When you need to add new behaviors to an object dynamically","When you need to create a family of related objects"], a:1,
+ e:"Single shared instance with global access."},
+
+{c:"Singleton", ty:"mcq", q:"Which of the following statements about the Singleton pattern is correct?",
+ o:["The Singleton pattern guarantees that a class will have only one instance, but it does not guarantee global access to that instance","The Singleton pattern is a type of structural design pattern","The Singleton pattern can be used to manage shared resources like database connections and configuration settings","The Singleton pattern is only applicable in object-oriented programming languages"], a:2,
+ e:"Singleton manages shared resources; it is creational and does provide global access."},
+
+{c:"Singleton", ty:"mcq", q:"Which of the following is a disadvantage of the Singleton pattern?",
+ o:["It reduces the flexibility of code by preventing subclassing","It allows multiple instances of a class to be created","It makes the code more difficult to understand and maintain","It cannot be used in multithreaded environments"], a:0,
+ e:"Private constructor blocks subclassing; global state also complicates testing."},
+
+{c:"Singleton", ty:"mcq", q:"Which of the following is a real-world example of the Singleton pattern?",
+ o:["A car engine management system","A user authentication service","A logging service that writes application logs to a file","A graphical user interface (GUI) framework"], a:2,
+ e:"One logger instance used everywhere - the classic Singleton example from the lecture."},
+
+{c:"Singleton", ty:"mcq", q:"Which design pattern restricts a class to have only one instance and provides global access to it?",
+ o:["Factory Pattern","Singleton Pattern","Builder Pattern","Prototype Pattern"], a:1,
+ e:"Singleton."},
+
+{c:"Singleton", ty:"mcq", q:"What type of design pattern is the Singleton pattern?",
+ o:["Structural Design Pattern","Creational Design Pattern","Behavioral Design Pattern","Architectural Design Pattern"], a:1,
+ e:"It controls creation - creational."},
+
+{c:"Singleton", ty:"mcq", q:"When is the creation of a Singleton instance in the Lazy Singleton pattern?",
+ o:["When the application starts.","When the getInstance() method is called for the first time.","When the class is loaded into memory.","Never; a Lazy Singleton is never actually instantiated."], a:1,
+ e:"Lazy = on first demand via getInstance()."},
+
+{c:"Singleton", ty:"mcq", q:"What is the main difference between Eager and Lazy Singleton patterns?",
+ o:["Eager Singleton uses a private constructor, while Lazy Singleton uses a public constructor.","Eager Singleton creates the instance at application startup, while Lazy Singleton creates it on demand.","Eager Singleton allows multiple instances, while Lazy Singleton ensures only one.","Eager Singleton is thread-safe, while Lazy Singleton is not."], a:1,
+ e:"Startup creation vs on-demand creation."},
+
+{c:"Singleton", ty:"mcq", q:"Which design pattern provides a way to access and manage a shared resource, like a database connection, to ensure that only one instance exists?",
+ o:["Factory Pattern","Builder Pattern","Singleton Pattern","Adapter Pattern"], a:2,
+ e:"Singleton - one connection manager."},
+
+{c:"Singleton", ty:"mcq", q:"According to the Dependency Inversion Principle, what should high-level modules depend on?",
+ o:["Concrete implementations of low-level modules","Abstractions (interfaces or abstract classes)","Specific data types","Global variables"], a:1,
+ e:"DIP reminder: depend on abstractions."},
+
+{c:"Singleton", ty:"mcq", q:"What is a potential disadvantage of the Eager Singleton pattern?",
+ o:["It can be more complex to implement than Lazy Singleton.","It can be resource-intensive if the Singleton is not always needed.","It does not allow for lazy initialization.","It is not thread-safe."], a:1,
+ e:"The instance is created even if never used - wasted resources."},
+
+{c:"Singleton", ty:"mcq", q:"Which design pattern is ideal for managing game settings that should remain consistent throughout the game?",
+ o:["Prototype Pattern","Factory Pattern","Singleton Pattern","Decorator Pattern"], a:2,
+ e:"Settings must be one shared object - Singleton."},
+
+{c:"Singleton", ty:"mcq", q:"What is one of the potential drawbacks of the Lazy Singleton pattern in a multithreaded environment?",
+ o:["It can lead to resource wastage.","It requires synchronization mechanisms to ensure thread safety.","It creates the instance eagerly at startup.","It violates the Single Responsibility Principle."], a:1,
+ e:"Lazy + threads = race conditions unless you synchronize."},
+
+{c:"Singleton", ty:"mcq", q:"What is a potential benefit of using an Eager Singleton pattern?",
+ o:["Lazy initialization.","Reduced resource consumption.","Inherent thread safety.","Dynamic instantiation."], a:2,
+ e:"Created at class-load time, before any thread can race - inherently thread-safe."},
+
+{c:"Singleton", ty:"mcq", q:"Which of the following could lead to a potential problem in the Singleton Design Pattern if not handled correctly?",
+ o:["Sharing the Singleton across multiple threads","Making the constructor public","Using the Singleton with multiple classes","Cloning the Singleton object"], a:0,
+ e:"Unsynchronized multi-thread access can create multiple instances - the key lecture point."},
+
+// ---- Singleton T/F ----
+{c:"Singleton", ty:"tf", q:"Using a public constructor, the Singleton pattern ensures a class has only one instance.", a:1, e:"False - the constructor must be PRIVATE."},
+
+{c:"Singleton", ty:"tf", q:"The Singleton pattern is used to restrict the instantiation of a class to one single instance.", a:0, e:"True."},
+
+{c:"Singleton", ty:"tf", q:"The Singleton pattern is a creational design pattern.", a:0, e:"True."},
+
+{c:"Singleton", ty:"tf", q:"The Singleton pattern allows for easy creation of multiple instances of the same class.", a:1, e:"False - it prevents multiple instances."},
+
+{c:"Singleton", ty:"tf", q:"The Singleton pattern is ideal for creating objects with multiple configurations.", a:1, e:"False - it is for ONE shared instance."},
+
+{c:"Singleton", ty:"tf", q:"In the Lazy Singleton pattern, the instance is created only when it is first needed.", a:0, e:"True - on first getInstance() call."},
+
+{c:"Singleton", ty:"tf", q:"The Eager Singleton pattern is more suitable for resource-intensive objects that are not frequently used.", a:1, e:"False - eager would waste resources on objects that may never be used."},
+
+{c:"Singleton", ty:"tf", q:"The Singleton pattern guarantees that only one instance of a class is created.", a:0, e:"True (assuming correct implementation)."},
+
+{c:"Singleton", ty:"tf", q:"The Singleton pattern can be implemented in various ways, including Eager and Lazy initialization.", a:0, e:"True."},
+
+{c:"Singleton", ty:"tf", q:"Lazy initialization in Singleton is more memory efficient but may cause delays during object creation.", a:0, e:"True - nothing is allocated until first use, but the first call pays the creation cost."},
+
+{c:"Singleton", ty:"tf", q:"A Singleton class must have a static method that returns the single instance of the class.", a:0, e:"True - e.g., public static Singleton getInstance()."},
+
+{c:"Singleton", ty:"tf", q:"The Singleton pattern is suitable for scenarios where global access to an instance is required.", a:0, e:"True."},
+
+{c:"Singleton", ty:"tf", q:"In a multithreaded environment, using a Singleton pattern without proper synchronization can lead to multiple instances being created.", a:0, e:"True - the lazy race condition."},
+
+{c:"Singleton", ty:"tf", q:"The Singleton pattern is considered a structural design pattern.", a:1, e:"False - it is CREATIONAL."},
+
+{c:"Singleton", ty:"tf", q:"The Singleton pattern is commonly used to manage shared resources like database connections and configuration settings.", a:0, e:"True."},
+
+{c:"Singleton", ty:"tf", q:"Lazy initialization in the Singleton pattern creates the instance only when it is first needed.", a:0, e:"True."},
+
+{c:"Singleton", ty:"tf", q:"The Singleton pattern is suitable for scenarios where global state management is required.", a:0, e:"True."},
+
+{c:"Singleton", ty:"tf", q:"The Singleton pattern violates the Single Responsibility Principle by controlling both the instantiation and the behavior of the class.", a:0, e:"True (as marked in the bank) - it manages its own creation AND its logic, which SRP purists consider a second responsibility."},
+
+{c:"Singleton", ty:"tf", q:"Eager initialization is generally more thread-safe than Lazy initialization in the Singleton pattern.", a:0, e:"True - created before any thread can race."},
+
+{c:"Singleton", ty:"tf", q:"The Singleton pattern can be used in both object-oriented and functional programming languages.", a:0, e:"True (as marked in the bank)."},
+
+{c:"Singleton", ty:"tf", q:"The Singleton pattern is ideal for managing multiple instances of a service in an application.", a:1, e:"False - it manages exactly ONE instance."},
+
+{c:"Singleton", ty:"tf", q:"The Singleton pattern should always be used to manage shared resources in a multithreaded application.", a:1, e:"False - 'always' is wrong; synchronization must be analyzed first."},
+
+{c:"Singleton", ty:"tf", q:"Using the Singleton pattern can make unit testing more difficult due to the global state it introduces.", a:0, e:"True - global state carries over between tests."}
+
+);
+
+/* ===== qdata6 ===== */
+// Part 6: Factory pattern question bank
+window.QUIZ_DATA = window.QUIZ_DATA || [];
+QUIZ_DATA.push(
+
+{c:"Factory", ty:"mcq", q:"Which of the following best describes the Factory design pattern?",
+ o:["A pattern that provides a way to create objects without specifying their exact class","A pattern that ensures only one instance of a class is created","A pattern that dynamically adds new behavior to an object","A pattern that defines a one-to-many relationship between objects"], a:0,
+ e:"Factory = creation without exposing the exact class to the client."},
+
+{c:"Factory", ty:"mcq", q:"What problem does the Factory pattern solve?",
+ o:["Managing global state across an application","Creating objects without exposing the instantiation logic to the client","Ensuring that a class has only one instance","Managing the composition of objects to form larger structures"], a:1,
+ e:"It hides 'new ConcreteClass()' behind a factory method."},
+
+{c:"Factory", ty:"mcq", q:"How does the Factory pattern solve the problem of creating objects?",
+ o:["By using a constructor to create objects","By providing a static method that returns an instance of a specific class","By using reflection to instantiate objects","By allowing direct access to the class's fields"], a:1,
+ e:"A (usually static) factory method decides which concrete class to instantiate and returns it."},
+
+{c:"Factory", ty:"mcq", q:"Which of the following is a key characteristic of the Factory pattern?",
+ o:["It ensures that a class can have only one instance","It hides the creation logic from the client and provides a common interface for object creation","It adds new behaviors to objects dynamically","It allows multiple classes to be instantiated at runtime"], a:1,
+ e:"Creation logic hidden behind a common interface."},
+
+{c:"Factory", ty:"mcq", q:"Which of the following is an example of when to use the Factory pattern?",
+ o:["When you need to manage a single instance of a class","When you need to create objects that are determined at runtime","When you need to dynamically change an object's behavior","When you need to manage complex relationships between classes"], a:1,
+ e:"The concrete type is decided at runtime (e.g., from user input) - use a factory."},
+
+{c:"Factory", ty:"mcq", q:"What is the main benefit of using the Factory pattern?",
+ o:["It ensures code is more efficient","It simplifies object creation and promotes loose coupling","It eliminates the need for classes altogether","It enforces strict type-checking"], a:1,
+ e:"Clients depend on the abstraction, not concrete classes - loose coupling."},
+
+{c:"Factory", ty:"mcq", q:"Which of the following is NOT a step in implementing the Factory pattern?",
+ o:["Define a common interface for the objects being created","Create concrete classes that implement the interface","Provide a factory method to create objects","Use a public constructor to create objects directly"], a:3,
+ e:"Direct construction with 'new' is exactly what the factory replaces."},
+
+{c:"Factory", ty:"mcq", q:"When would the Factory pattern be an inappropriate choice?",
+ o:["When you need to manage a single instance of a resource","When object creation is simple and doesn't require additional logic","When the application needs to create objects dynamically","When different subclasses need to be instantiated based on user input"], a:1,
+ e:"Simple creation needs no factory - it would just add complexity."},
+
+{c:"Factory", ty:"mcq", q:"Which of the following scenarios is best suited for the Factory pattern?",
+ o:["Creating a singleton database connection","Creating different types of shapes in a drawing application","Adding new functionality to an existing object at runtime","Managing access to a shared resource"], a:1,
+ e:"ShapeFactory creating Circle/Square/... from the lecture's Shape example."},
+
+{c:"Factory", ty:"mcq", q:"Which method is commonly used to implement the Factory pattern?",
+ o:["getInstance()","createObject()","factoryMethod()","newObject()"], a:2,
+ e:"factoryMethod() is the GoF name for the creation method (getInstance() belongs to Singleton)."},
+
+{c:"Factory", ty:"mcq", q:"What principle does the Factory pattern promote?",
+ o:["Dependency on concrete classes","Tight coupling between components","Encapsulation of object creation logic","Multiple inheritance"], a:2,
+ e:"Creation is encapsulated inside the factory."},
+
+{c:"Factory", ty:"mcq", q:"How does the Factory pattern improve code maintainability?",
+ o:["By reducing the number of classes","By centralizing the object creation logic","By enforcing strict variable naming conventions","By eliminating the need for interfaces"], a:1,
+ e:"Creation changes happen in ONE place (the factory)."},
+
+{c:"Factory", ty:"mcq", q:"What is a potential drawback of the Factory pattern?",
+ o:["It can make code less flexible","It may introduce additional complexity","It prevents object instantiation","It requires the use of multiple inheritance"], a:1,
+ e:"Extra factory layer = extra classes/indirection."},
+
+{c:"Factory", ty:"mcq", q:"Which of the following best demonstrates the use of the Factory pattern in Java? (ShapeFactory.getShape(\"Circle\"))",
+ code:"public interface Shape { void draw(); }\npublic class Circle implements Shape { public void draw(){ System.out.println(\"Drawing a Circle\"); } }\npublic class ShapeFactory {\n  public static Shape getShape(String shapeType) {\n    if (shapeType.equals(\"Circle\")) return new Circle();\n    return null;\n  }\n}",
+ o:["The ShapeFactory uses a constructor to create shapes","The ShapeFactory class exposes the instantiation logic to the client","The ShapeFactory hides the object creation logic and returns an appropriate object","The Shape class handles object creation internally"], a:2,
+ e:"The client asks for a Shape and receives a Circle without knowing the concrete class."},
+
+{c:"Factory", ty:"mcq", q:"Which design principle is closely related to the Factory pattern?",
+ o:["Open/Closed Principle","Single Responsibility Principle","Liskov Substitution Principle","Interface Segregation Principle"], a:0,
+ e:"New products are added as new classes without touching client code - OCP."},
+
+{c:"Factory", ty:"mcq", q:"What is a key advantage of the Factory design pattern?",
+ o:["It ensures that only one instance of a class is created","It allows you to create objects without specifying the exact class","It provides a way to copy existing objects","It adds new responsibilities to objects dynamically"], a:1,
+ e:"The client never says 'new Circle()' - it just asks for a Shape."},
+
+{c:"Factory", ty:"mcq", q:"Which design pattern is used to create families of related objects without specifying their concrete classes?",
+ o:["Singleton Pattern","Factory Pattern","Prototype Pattern","Builder Pattern"], a:1,
+ e:"(Abstract) Factory creates families of related products; at this course level the answer is Factory."},
+
+{c:"Factory", ty:"mcq", q:"Which design pattern is suitable for creating weapon objects in a game like PUBG, allowing easy addition of new weapon types?",
+ o:["Builder Pattern","Prototype Pattern","Factory Pattern","Singleton Pattern"], a:2,
+ e:"WeaponFactory.create(\"AK47\") - new weapons = new classes, factory extends easily."},
+
+{c:"Factory", ty:"mcq", q:"What is the core idea behind the Factory design pattern?",
+ o:["To define a template for creating objects.","To centralize the creation of objects, providing an interface that isolates clients from concrete classes.","To ensure that only one instance of a class exists.","To add responsibilities to objects dynamically."], a:1,
+ e:"Centralized creation + client isolation from concrete classes."},
+
+{c:"Factory", ty:"mcq", q:"Which of the following scenarios is best suited for the Factory pattern?",
+ o:["When a class needs to ensure a single instance.","When a class needs to be extended.","When you have a superclass with multiple subclasses, and you need to return an object based on input.","When you want to copy objects."], a:2,
+ e:"Input decides which subclass the factory returns."},
+
+{c:"Factory", ty:"mcq", q:"What does the Factory pattern provide over directly instantiating objects using the new keyword?",
+ o:["Reduces the number of classes.","Improves code readability.","Encapsulates object creation and increases flexibility.","Reduces memory usage."], a:2,
+ e:"Creation is encapsulated and swappable - flexibility."},
+
+{c:"Factory", ty:"mcq", q:"In the Factory Method pattern, what advantage does the following implementation provide over a traditional constructor?",
+ code:"public abstract class ShapeFactory {\n  public abstract Shape createShape();\n  public void renderShape() {\n    Shape shape = createShape();\n    shape.draw();\n  }\n}\npublic class CircleFactory extends ShapeFactory {\n  public Shape createShape() { return new Circle(); }\n}",
+ o:["The renderShape method violates the Open/Closed Principle.","None of the above.","The CircleFactory eliminates the need for a separate Factory class.","The createShape method allows for dynamic selection of shape types at runtime."], a:3,
+ e:"Subclasses override createShape() to decide the product at runtime - the Factory Method pattern."},
+
+{c:"Factory", ty:"mcq", q:"Consider the following code snippet for the Factory Pattern. What is the output of the code? (AnimalFactory.createAnimal(\"Dog\"); animal.sound();)",
+ code:"interface Animal { void sound(); }\nclass Dog implements Animal { public void sound(){ System.out.println(\"Bark\"); } }\nclass Cat implements Animal { public void sound(){ System.out.println(\"Meow\"); } }\nclass AnimalFactory {\n  public static Animal createAnimal(String type) {\n    if (type.equals(\"Dog\")) return new Dog();\n    else if (type.equals(\"Cat\")) return new Cat();\n    return null;\n  }\n}\n// main: Animal animal = AnimalFactory.createAnimal(\"Dog\"); animal.sound();",
+ o:["\"Meow\"","Compilation Error","\"Bark\"","\"NullPointerException\""], a:2,
+ e:"createAnimal(\"Dog\") returns a Dog, whose sound() prints Bark."},
+
+// ---- Factory T/F ----
+{c:"Factory", ty:"tf", q:"The Factory Method pattern creates an object by exposing its implementation.", a:1, e:"False - it HIDES the instantiation logic from the client."},
+
+{c:"Factory", ty:"tf", q:"The Factory Method pattern violates the Open/Closed Principle if new types are added.", a:1, e:"False - new types are added with new classes; the client code stays closed."},
+
+{c:"Factory", ty:"tf", q:"In the Factory Method pattern, the client determines which class to instantiate.", a:1, e:"False - the factory decides; the client only requests a type."},
+
+{c:"Factory", ty:"tf", q:"The Factory Method pattern is used to create an object without exposing the instantiation logic to the client.", a:0, e:"True."},
+
+{c:"Factory", ty:"tf", q:"The Factory pattern is a creational design pattern.", a:0, e:"True."},
+
+{c:"Factory", ty:"tf", q:"The Factory pattern defines an interface for creating objects, but lets subclasses decide which class to instantiate.", a:0, e:"True - the GoF Factory Method definition."},
+
+{c:"Factory", ty:"tf", q:"The Factory pattern promotes loose coupling by abstracting the object creation process.", a:0, e:"True."},
+
+{c:"Factory", ty:"tf", q:"The Factory pattern provides a centralized way to create objects.", a:0, e:"True."},
+
+{c:"Factory", ty:"tf", q:"The Factory pattern requires clients to know the concrete classes of the objects they are creating.", a:1, e:"False - clients only know the abstraction."},
+
+{c:"Factory", ty:"tf", q:"Factory patterns eliminate the need to use inheritance between classes.", a:1, e:"False - the products normally implement a common interface / extend a superclass."},
+
+{c:"Factory", ty:"tf", q:"Factory patterns help to reduce coupling between the client and the concrete classes.", a:0, e:"True."},
+
+{c:"Factory", ty:"tf", q:"The Factory pattern promotes tight coupling between the client and the concrete classes.", a:1, e:"False - it reduces coupling."},
+
+{c:"Factory", ty:"tf", q:"Using the Factory pattern can make it easier to add new types of objects without modifying existing code.", a:0, e:"True - OCP in action."},
+
+{c:"Factory", ty:"tf", q:"The Factory pattern eliminates the need for interfaces in object-oriented programming.", a:1, e:"False - it is built around a common interface."},
+
+{c:"Factory", ty:"tf", q:"The Factory pattern is suitable for creating objects with complex initialization logic.", a:0, e:"True - the factory hides the complexity."},
+
+{c:"Factory", ty:"tf", q:"The Factory pattern can be used to manage shared resources in a multithreaded application.", a:0, e:"True (as marked in the bank) - a factory can centralize and guard resource creation."},
+
+{c:"Factory", ty:"tf", q:"A Factory class must always use a static method to create objects.", a:1, e:"False - factory methods can be instance methods too (Factory Method pattern)."},
+
+{c:"Factory", ty:"tf", q:"The Factory pattern helps reduce the number of direct dependencies between classes.", a:0, e:"True."},
+
+{c:"Factory", ty:"tf", q:"The Factory pattern can help achieve the Open/Closed Principle by making it easier to extend functionality without modifying existing code.", a:0, e:"True."},
+
+{c:"Factory", ty:"tf", q:"The Factory pattern can be used to create objects that are determined at runtime based on input or configuration.", a:0, e:"True."},
+
+{c:"Factory", ty:"tf", q:"The Factory pattern is inappropriate for scenarios where object creation logic is straightforward and doesn't require additional complexity.", a:0, e:"True - don't add a factory for simple 'new' calls."},
+
+{c:"Factory", ty:"tf", q:"The Factory pattern can make unit testing easier by abstracting the creation of objects.", a:0, e:"True - inject a factory returning test doubles."},
+
+{c:"Factory", ty:"tf", q:"The Factory pattern is primarily used to enforce the Single Responsibility Principle.", a:1, e:"False - its main concern is object creation and decoupling, not SRP."},
+
+{c:"Factory", ty:"tf", q:"The Factory pattern is considered a behavioral design pattern.", a:1, e:"False - it is CREATIONAL."},
+
+{c:"Factory", ty:"tf", q:"Using the Factory pattern can lead to code that is more flexible and easier to maintain.", a:0, e:"True."}
+
+);
+
+</script>
+<script>
+/* App logic: dedupe, filters, practice cards, mock exam, stats */
+(function(){
+"use strict";
+
+// ---------- build question list (dedupe identical question+options) ----------
+var seen = {};
+var QS = [];
+window.QUIZ_DATA.forEach(function(q){
+  var key = (q.q||'').trim().toLowerCase() + '|' + q.ty + '|' +
+            (q.o ? q.o.join('~').trim().toLowerCase() : '');
+  if (seen[key]) return;
+  seen[key] = 1;
+  var copy = {};
+  for (var k in q) copy[k] = q[k];
+  copy.id = 'q' + QS.length;
+  QS.push(copy);
+});
+
+var CATS = [];
+QS.forEach(function(q){ if (CATS.indexOf(q.c) < 0) CATS.push(q.c); });
+
+// ---------- state ----------
+var STORE_KEY = 'se-exam-trainer-v1';
+var store = { ans:{}, rev:{} };
+try {
+  var raw = localStorage.getItem(STORE_KEY);
+  if (raw) { var p = JSON.parse(raw); if (p && p.ans) store = p; if (!store.rev) store.rev = {}; }
+} catch(e){}
+function saveStore(){ try { localStorage.setItem(STORE_KEY, JSON.stringify(store)); } catch(e){} }
+
+var state = { cat:'All', type:'all', status:'all', search:'', shuffle:false, order:null };
+var exam = null;
+
+// ---------- helpers ----------
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function optsOf(q){ return q.ty === 'tf' ? ['True','False'] : q.o; }
+function shuffleArr(a){ for (var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=a[i]; a[i]=a[j]; a[j]=t; } return a; }
+
+function filtered(){
+  var list = state.order || QS;
+  return list.filter(function(q){
+    if (state.cat !== 'All' && q.c !== state.cat) return false;
+    if (state.type !== 'all' && q.ty !== state.type) return false;
+    if (state.search && q.q.toLowerCase().indexOf(state.search) < 0) return false;
+    var a = store.ans[q.id], r = store.rev[q.id];
+    if (state.status === 'unanswered' && (a !== undefined || r)) return false;
+    if (state.status === 'wrong' && (a === undefined || a === q.a)) return false;
+    if (state.status === 'correct' && a !== q.a) return false;
+    return true;
+  });
+}
+
+function codeHTML(q){
+  return q.code ? '<pre class="code">' + esc(q.code) + '</pre>' : '';
+}
+
+function optionHTML(q, i, o){
+  var letter = q.ty === 'tf' ? '' : '<span class="letter">' + String.fromCharCode(65+i) + '</span>';
+  return '<button class="opt" data-qid="' + q.id + '" data-idx="' + i + '">' + letter + '<span>' + esc(o) + '</span></button>';
+}
+
+function paintCard(cardEl, q, showFeedback){
+  var chosen = store.ans[q.id];
+  var revealed = store.rev[q.id];
+  var answered = chosen !== undefined;
+  var opts = optsOf(q);
+  var correct = answered && chosen === q.a;
+
+  // badge result
+  var top = cardEl.querySelector('.card-top');
+  var old = top.querySelector('.res'); if (old) old.remove();
+  var b = document.createElement('span');
+  b.className = 'badge res ' + (revealed && !answered ? 'res-rev' : correct ? 'res-ok' : answered ? 'res-bad' : '');
+  b.textContent = revealed && !answered ? 'Revealed' : correct ? 'Correct' : answered ? 'Incorrect' : 'Unanswered';
+  top.insertBefore(b, top.querySelector('.qnum'));
+
+  var optsEl = cardEl.querySelector('.opts');
+  if (answered || revealed){
+    var html = '';
+    opts.forEach(function(o, i){
+      var cls = 'opt';
+      if (i === q.a) cls += ' correct';
+      if (answered && i === chosen && chosen !== q.a) cls += ' wrong';
+      var letter = q.ty === 'tf' ? '' : '<span class="letter">' + String.fromCharCode(65+i) + '</span>';
+      html += '<button class="' + cls + '" disabled>' + letter + '<span>' + esc(o) + '</span></button>';
+    });
+    optsEl.innerHTML = html;
+    var ex = document.createElement('div');
+    ex.className = 'explain' + (answered ? (correct ? ' ok' : ' bad') : '');
+    ex.innerHTML = (answered ? (correct ? '<b>Correct!</b> ' : '<b>Not quite.</b> ') : '<b>Answer:</b> ' ) +
+      esc(opts[q.a]) + '. ' + esc(q.e);
+    cardEl.querySelector('.reveal-btn') && (cardEl.querySelector('.reveal-btn').style.display = 'none');
+    optsEl.after(ex);
+    cardEl.classList.add('locked');
+  }
+}
+
+function cardHTML(q, num){
+  var opts = optsOf(q);
+  var h = '<div class="card" data-card="' + q.id + '">';
+  h += '<div class="card-top"><span class="badge cat">' + esc(q.c) + '</span>';
+  h += '<span class="badge type">' + (q.ty === 'tf' ? 'True / False' : 'MCQ') + '</span>';
+  h += '<span class="qnum">Question ' + num + '</span></div>';
+  h += '<div class="qtext">' + esc(q.q) + '</div>';
+  h += codeHTML(q);
+  h += '<div class="opts">';
+  opts.forEach(function(o,i){ h += optionHTML(q,i,o); });
+  h += '</div>';
+  h += '<button class="reveal-btn" data-reveal="' + q.id + '">Show answer</button>';
+  h += '</div>';
+  return h;
+}
+
+// ---------- practice rendering ----------
+function renderChips(){
+  var el = document.getElementById('catChips');
+  var html = '<button class="chip' + (state.cat==='All'?' active':'') + '" data-cat="All">All<span class="n">(' + QS.length + ')</span></button>';
+  CATS.forEach(function(c){
+    var n = QS.filter(function(q){ return q.c === c; }).length;
+    html += '<button class="chip' + (state.cat===c?' active':'') + '" data-cat="' + esc(c) + '">' + esc(c) + '<span class="n">(' + n + ')</span></button>';
+  });
+  el.innerHTML = html;
+  el.querySelectorAll('.chip').forEach(function(ch){
+    ch.addEventListener('click', function(){ state.cat = ch.getAttribute('data-cat'); renderChips(); renderPractice(); });
+  });
+}
+
+function updateStats(list){
+  var answered = 0, correct = 0;
+  list.forEach(function(q){
+    var a = store.ans[q.id];
+    if (a !== undefined){ answered++; if (a === q.a) correct++; }
+  });
+  document.getElementById('stShown').textContent = list.length;
+  document.getElementById('stAnswered').textContent = answered;
+  document.getElementById('stCorrect').textContent = correct;
+  document.getElementById('stAcc').textContent = answered ? Math.round(correct/answered*100) + '%' : '0%';
+  document.getElementById('progBar').style.width = (list.length ? Math.round(answered/list.length*100) : 0) + '%';
+}
+
+function renderPractice(){
+  var list = filtered();
+  var holder = document.getElementById('qList');
+  if (!list.length){
+    holder.innerHTML = '<div class="panel" style="text-align:center;color:var(--muted)">No questions match this filter. 🎉 Try clearing the search or status filter.</div>';
+    updateStats(list); return;
+  }
+  var html = '';
+  list.forEach(function(q,i){ html += cardHTML(q, i+1); });
+  holder.innerHTML = html;
+  list.forEach(function(q){
+    var cardEl = holder.querySelector('[data-card="' + q.id + '"]');
+    paintCard(cardEl, q, true);
+  });
+  updateStats(list);
+}
+
+// ---------- events (delegation) ----------
+document.getElementById('qList').addEventListener('click', function(ev){
+  var opt = ev.target.closest('.opt');
+  var rev = ev.target.closest('.reveal-btn');
+  var cardEl = ev.target.closest('.card');
+  if (!cardEl) return;
+  var qid = cardEl.getAttribute('data-card');
+  var q = QS.find(function(x){ return x.id === qid; });
+  if (!q) return;
+  if (opt && !opt.disabled && store.ans[qid] === undefined && !store.rev[qid]){
+    store.ans[qid] = parseInt(opt.getAttribute('data-idx'), 10);
+    saveStore();
+    paintCard(cardEl, q, true);
+    updateStats(filtered());
+  } else if (rev && store.ans[qid] === undefined){
+    store.rev[qid] = 1;
+    saveStore();
+    paintCard(cardEl, q, true);
+    updateStats(filtered());
+  }
+});
+
+function onSearch(v){ state.search = v.trim().toLowerCase(); renderPractice(); }
+function onType(v){ state.type = v; renderPractice(); }
+function onStatus(v){ state.status = v; renderPractice(); }
+function toggleShuffle(){
+  state.shuffle = !state.shuffle;
+  document.getElementById('shuffleBtn').textContent = 'Shuffle: ' + (state.shuffle ? 'On' : 'Off');
+  state.order = state.shuffle ? shuffleArr(QS.slice()) : null;
+  renderPractice();
+}
+function resetProgress(){
+  if (!confirm('Reset all saved answers and revealed hints?')) return;
+  store = { ans:{}, rev:{} };
+  saveStore();
+  renderPractice();
+}
+window.onSearch = onSearch; window.onType = onType; window.onStatus = onStatus;
+window.toggleShuffle = toggleShuffle; window.resetProgress = resetProgress;
+
+// ---------- tabs ----------
+window.switchTab = function(t){
+  ['practice','exam','guide'].forEach(function(name){
+    document.getElementById('tab-' + name).classList.toggle('active', name === t);
+    document.getElementById('view-' + name).classList.toggle('active', name === t);
+  });
+};
+
+// ---------- mock exam ----------
+function poolForScope(scope){
+  if (scope === 'oop') return QS.filter(function(q){ return q.c === 'Quiz 1' || q.c === 'OOP'; });
+  if (scope === 'solid') return QS.filter(function(q){ return ['SOLID Mixed','SRP','OCP','LSP','ISP','DIP','SOLID Bank'].indexOf(q.c) >= 0; });
+  if (scope === 'patterns') return QS.filter(function(q){ return ['Patterns','Singleton','Factory'].indexOf(q.c) >= 0; });
+  return QS.slice();
+}
+
+window.startExam = function(){
+  var n = parseInt(document.getElementById('examCount').value, 10);
+  var scope = document.getElementById('examScope').value;
+  var mins = parseInt(document.getElementById('examMinutes').value, 10) || 25;
+  var pool = shuffleArr(poolForScope(scope));
+  if (n > 0) pool = pool.slice(0, n);
+  if (!pool.length){ alert('No questions in this scope.'); return; }
+  exam = { ids: pool.map(function(q){ return q.id; }), cur: 0, answers: {}, left: mins * 60, timer: null };
+  document.getElementById('examSetup').style.display = 'none';
+  document.getElementById('examResult').style.display = 'none';
+  document.getElementById('examRun').style.display = 'block';
+  document.getElementById('examTotal').textContent = exam.ids.length;
+  renderPalette();
+  renderExamQ();
+  exam.timer = setInterval(function(){
+    exam.left--;
+    var tEl = document.getElementById('examTimer');
+    var m = Math.floor(exam.left / 60), s = exam.left % 60;
+    tEl.textContent = (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s;
+    tEl.classList.toggle('low', exam.left < 60);
+    if (exam.left <= 0) finishExam(false);
+  }, 1000);
+  updateExamAnswered();
+};
+
+window.quitExam = function(){
+  if (!confirm('Quit the exam? Your answers will be lost.')) return;
+  clearInterval(exam.timer); exam = null;
+  document.getElementById('examRun').style.display = 'none';
+  document.getElementById('examSetup').style.display = 'block';
+};
+
+function renderPalette(){
+  var el = document.getElementById('examPalette');
+  var html = '';
+  exam.ids.forEach(function(id, i){
+    var cls = 'pal' + (exam.answers[id] !== undefined ? ' done' : '') + (i === exam.cur ? ' cur' : '');
+    html += '<button class="' + cls + '" data-pal="' + i + '">' + (i+1) + '</button>';
+  });
+  el.innerHTML = html;
+  el.querySelectorAll('.pal').forEach(function(b){
+    b.addEventListener('click', function(){ exam.cur = parseInt(b.getAttribute('data-pal'), 10); renderPalette(); renderExamQ(); });
+  });
+}
+
+function updateExamAnswered(){
+  var n = 0;
+  exam.ids.forEach(function(id){ if (exam.answers[id] !== undefined) n++; });
+  document.getElementById('examAnswered').textContent = n;
+}
+
+function renderExamQ(){
+  var q = QS.find(function(x){ return x.id === exam.ids[exam.cur]; });
+  var holder = document.getElementById('examQHolder');
+  var html = '<div class="card"><div class="card-top">';
+  html += '<span class="badge cat">' + esc(q.c) + '</span>';
+  html += '<span class="badge type">' + (q.ty === 'tf' ? 'True / False' : 'MCQ') + '</span>';
+  html += '<span class="qnum">Question ' + (exam.cur + 1) + ' of ' + exam.ids.length + '</span></div>';
+  html += '<div class="qtext">' + esc(q.q) + '</div>' + codeHTML(q);
+  html += '<div class="opts">';
+  optsOf(q).forEach(function(o, i){
+    var sel = exam.answers[q.id] === i ? ' chosen' : '';
+    html += '<button class="opt' + sel + '" data-exid="' + q.id + '" data-idx="' + i + '">' +
+            (q.ty === 'tf' ? '' : '<span class="letter">' + String.fromCharCode(65+i) + '</span>') +
+            '<span>' + esc(o) + '</span></button>';
+  });
+  html += '</div></div>';
+  holder.innerHTML = html;
+}
+
+document.getElementById('examQHolder').addEventListener('click', function(ev){
+  var opt = ev.target.closest('.opt');
+  if (!opt || !exam) return;
+  var id = opt.getAttribute('data-exid');
+  exam.answers[id] = parseInt(opt.getAttribute('data-idx'), 10);
+  updateExamAnswered();
+  renderPalette();
+  renderExamQ();
+});
+
+window.examNav = function(d){
+  exam.cur = Math.min(Math.max(exam.cur + d, 0), exam.ids.length - 1);
+  renderPalette(); renderExamQ();
+};
+
+window.finishExam = function(manual){
+  if (manual && Object.keys(exam.answers).length < exam.ids.length){
+    if (!confirm('You answered ' + Object.keys(exam.answers).length + ' of ' + exam.ids.length + '. Finish anyway?')) return;
+  }
+  clearInterval(exam.timer);
+  var total = exam.ids.length, score = 0;
+  var rows = '';
+  exam.ids.forEach(function(id, i){
+    var q = QS.find(function(x){ return x.id === id; });
+    var a = exam.answers[id];
+    var ok = a === q.a;
+    if (ok) score++;
+    var opts = optsOf(q);
+    rows += '<div class="card"><div class="card-top">';
+    rows += '<span class="badge res ' + (ok ? 'res-ok' : 'res-bad') + '">' + (ok ? 'Correct' : 'Wrong') + '</span>';
+    rows += '<span class="badge cat">' + esc(q.c) + '</span><span class="qnum">Question ' + (i+1) + '</span></div>';
+    rows += '<div class="qtext">' + esc(q.q) + '</div>' + codeHTML(q);
+    rows += '<div class="explain ' + (ok ? 'ok' : 'bad') + '">';
+    rows += '<b>Your answer:</b> ' + (a === undefined ? '— (no answer)' : esc(opts[a])) + '<br>';
+    rows += '<b>Correct answer:</b> ' + esc(opts[q.a]) + '<br>' + esc(q.e) + '</div></div>';
+  });
+  var pct = Math.round(score / total * 100);
+  var msg = pct >= 80 ? 'Excellent — you are ready.' : pct >= 60 ? 'Good — review the wrong ones below and retake.' : 'Keep drilling — use Practice mode on the categories you missed.';
+  var el = document.getElementById('examResult');
+  el.innerHTML = '<div class="panel result-score"><div class="big">' + score + ' / ' + total + '</div>' +
+    '<div class="sub">' + pct + '% — ' + msg + '</div>' +
+    '<div style="margin-top:14px"><button class="btn" onclick="backToSetup()">New exam</button></div></div>' + rows;
+  document.getElementById('examRun').style.display = 'none';
+  el.style.display = 'block';
+  exam = null;
+  el.scrollIntoView({ behavior: 'smooth' });
+};
+
+window.backToSetup = function(){
+  document.getElementById('examResult').style.display = 'none';
+  document.getElementById('examSetup').style.display = 'block';
+};
+
+// ---------- init ----------
+renderChips();
+renderPractice();
+})();
+</script>
+</body>
+</html>

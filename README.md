@@ -3,6 +3,7 @@
 an object represents two things
 
 Attributes : which is the information about the object
+
 methods : which is what the object does or can preform 
 
 OOP in java is built around 
@@ -84,6 +85,18 @@ Subclass    |    Child class
 extends	    |    Keyword used for class inheritance
 IS-A        |  	 Relationship between parent and child
 
+- Single Inheritance
+
+ One child inherits from one parent.
+
+- Multilevel Inheritance
+
+ A chain of inheritance.
+
+- Hierarchical Inheritance
+
+ Multiple children inherit from the same parent.
+
 ## Access modifiers in inheritance
 
 Java has 4 access levels 
@@ -95,3 +108,41 @@ Java has 4 access levels
 3. Protected Accessible inside the same package and through inheritance outside the package.
 
 4. Default Accessible inside the same package. No modifier is written.
+
+---
+
+### Polymorphism
+
+polymorphism has many forms.
+
+In Java, it allows the same method name or reference type to work with different implementations
+so theres
+
+- Method Overloading
+
+- Method Overriding
+
+
+
+### 1. Method Overloading
+
+method overloading is creating multiple methods with the same name but different parameters
+
+> see Main.java
+
+---
+
+### 2. Method Overriding
+
+Method overriding happens when a child class provides its own implementation of a method already defined in its parent class.
+
+> see Main.java
+
+
+---
+
+### Polymorphic referencing
+
+You can call methods available through the reference, and the overridden instance method is called.
+
+---

@@ -5,11 +5,37 @@ package com.example;
 class student { // this is a class that represents a student 
     String name; // this student has a name
     int age; // this student has an age
-    public String grade; // this student has a grade
+    public String grade; // this student has a Public grade
 
     void study() { // this is a method that explains what the student (object) should preform
         System.out.println("All students are studying"); // this is the action that the student (object) should preform
             
+
+    }
+
+    void grades() { // this is a method that explains what the student (object) should preform
+        System.out.println("these students are getting grades"); // this is the action that the student (object) should preform
+            
+
+    }
+            // preforming method overloading to create multiple methods with the same name but different parameters
+    int grade(int math, int science){ // this is the first method that explains what the student (object) should preform
+
+        return math + science; // this is the action that the student (object) should preform
+
+    }
+
+    int grade(int math , int science, int english){ // this is the second method that explains what the student (object) should preform
+
+        return math + science + english; // this is the action that the student (object) should preform
+
+
+
+}
+
+    double grade(double math , double science, double english, double AP){ // this is the third method that explains what the student (object) should preform
+
+        return math + science + english + AP; // this is the action that the student (object) should preform
 
     }
 }
@@ -21,7 +47,16 @@ class student { // this is a class that represents a student
             System.out.println("this grade students are learning simple math"); // this is the action that the 1st grade student (object) should preform
         }
 
+        @Override // preforming method overriding to change the behavior of the method grades() from the parent class student
+        void grades() { // this is a method that explains what the 1st grade student (object) should preform
+            System.out.println("first grade students are getting grades"); // this is the action that the 1st grade student (object) should preform
+                
+
+        }
+
     }
+
+
 
     class secondgrade extends firstgrade{ // this is a class is a child class that represents a 2nd grade student (Inheritance)
       
@@ -36,6 +71,14 @@ class student { // this is a class that represents a student
             grade = g; // this is the grade of the student
 
     }
+
+      @Override  // preforming method overriding to change the behavior of the method grades() from the parent class firstgrade
+         void grades() { // this is a method that explains what the 2nd grade student (object) should preform
+               System.out.println("second grade students are getting grades"); // this is the action that the 2nd grade student (object) should preform
+            
+
+    }
+
 }
 
     class teacher1{ // this is a class that represents a teacher1
@@ -83,8 +126,6 @@ public static void main(String[] args) {
 // we can create multiple objects from the same class (blueprint) and set their properties (name and age) to different values.
 
     student studying = new student(); // this is the object that we are gonna create using the class (blueprint) to call the method study() from the class student
-
-
     student student1= new student(); // this is the student object that we are gonna create using the class (blueprint)
     student student2= new student(); // this is the second student object that we are gonna create using the class (blueprint)
     student student3= new student(); // this is the third student object that we are gonna create using the class (blueprint)
@@ -111,7 +152,6 @@ public static void main(String[] args) {
 
     studying.study(); // call the method study() from the object studying
 
-        teacher1.smith(); // call the static method smith() from the class teacher1
         teacher1 teacher1 = new teacher1(); // this is the object that we are gonna create using the class (blueprint) to call the method Smith() from the class teacher1
         System.out.println(teacher1.age); // print the age of the teacher
         System.out.println(teacher1.name); // print the name of the teacher
@@ -126,7 +166,7 @@ public static void main(String[] args) {
         firstgrade firstgrade = new firstgrade(); // this is the object that we are gonna create using the class (blueprint) to call the method simplemath() from the class firstgrade
         firstgrade.simplemath(); // call the method simplemath() from the object firstgrade
         firstgrade.study(); // call the method study() from the object firstgrade (Inheritance)
-
+        firstgrade.grades(); // call the method grades() from the object firstgrade (Inheritance)
 
 
         
@@ -135,14 +175,18 @@ public static void main(String[] args) {
         secondgrade.study(); // call the method study() from the object secondgrade (Inheritance)
         secondgrade.complexmath(); // call the method complexmath() from the object secondgrade
         secondgrade.simplemath(); // call the method simplemath() from the object secondgrade (Inheritance)
+        secondgrade.grades(); // call the method grades() from the object secondgrade (Inheritance)
 
 
         System.out.println("Student Name: " + secondgrade.name); // print the name of the student
         System.out.println("Student Age: " + secondgrade.age); //
         System.out.println("Student Grade: " + secondgrade.grade); // print the grade of the student
 
-
-
+        student grade = new student(); // this is the object that we are gonna create using the class (blueprint) to call the method grade() from the class student
+        
+        System.out.println(grade.grade(90, 80)); // call the first method grade() from the object grade
+        System.out.println(grade.grade(90, 80, 70)); // call the second method grade() from the object grade
+        System.out.println(grade.grade(90.33, 80.11, 70.32, 60.23)); // call the third
 
 
     }   
