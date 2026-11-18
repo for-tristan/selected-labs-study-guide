@@ -1,220 +1,283 @@
-## refer to the main.java for the code detailed explanation  
+# Object-Oriented Programming (OOP) in Java
 
-an object represents two things
+> **Code Reference:** Refer to `part1.java` for detailed code explanations and practical examples.
 
-Attributes : which is the information about the object
+## What Is an Object?
 
-methods : which is what the object does or can preform 
+An object represents two main things:
 
-OOP in java is built around 
+- **Attributes:** Information or data about the object.
+- **Methods:** Actions or behaviors that the object can perform.
 
-- classes 
-- objects
-- encapsulation
-- inheritance
-- polymorphism
-- abstraction
+Object-Oriented Programming (OOP) in Java is built around six main concepts:
 
----
-
-### Classes 
-
-is a blueprint of an object more like a general information about that object and a description about it, it also describes what an object should contain 
-
-
---- 
-
-### Objects
-
-An object is an instance of a class. which means Classes are the blueprint and objects are the actual living things inside that blueprint 
-
-You can also create multiple objects from the same class
-
-
---- 
-
-### methods 
-
-A method is a block of code that preforms a specific action when called 
-
-and theres two types of methods 
-
-- Standard Library Methods
-- User-Defined Methods
-
-### whats the difference between the two 
-
-- void does not return a value 
-
-- int means the method returns an integer inside the static method
-
-
-See example in Main.java
-
+1. Classes
+2. Objects
+3. Encapsulation
+4. Inheritance
+5. Polymorphism
+6. Abstraction
 
 ---
 
-### Constructors
+## 1. Classes
 
-A constructor is a special method used to initialize an object when it is created inside the Class
+A **class** is a blueprint or template used to create objects.
 
-theres 2 types 
+It provides general information about an object and describes what an object should contain, including its attributes and methods.
 
-- Default/no-argument constructor
+Think of a class as a design or plan that defines how objects should be structured and behave.
 
-- Parameterized constructor
+---
 
+## 2. Objects
 
+An **object** is an instance of a class.
 
-Constructor rules
+This means:
+- A class is the blueprint.
+- An object is the actual instance created from that blueprint.
+
+You can also create multiple objects from the same class, each with its own attribute values.
+
+---
+
+## 3. Methods
+
+A **method** is a block of code that performs a specific action when called.
+
+There are two main types of methods:
+
+- **Standard Library Methods:** Predefined methods provided by Java.
+- **User-Defined Methods:** Methods created by the programmer.
+
+### Return Types
+
+A method's return type determines what kind of value it gives back after execution.
+
+- `void`: The method does not return a value.
+- `int`: The method returns an integer.
+- Other types, such as `String`, `double`, and `boolean`, can also be used as return types.
+
+**Code Reference:** See `part1.java` for examples of method declarations and calls.
+
+---
+
+## 4. Constructors
+
+A **constructor** is a special member of a class used to initialize an object when it is created.
+
+There are two common types of constructors:
+
+1. **Default / No-Argument Constructor:** A constructor that takes no parameters.
+2. **Parameterized Constructor:** A constructor that accepts parameters to initialize an object with specific values.
+
+### Constructor Rules
+
 1. The constructor name must be identical to the class name.
-2. It has no return type, not even void.
-3. It executes automatically when an object is created.
+2. It has no return type, not even `void`.
+3. It executes automatically when an object is created using `new`.
 4. It can accept parameters.
 5. Constructors can be overloaded.
 
 ---
 
-### Inheritance
+## 5. Inheritance
 
-Inheritance allows one class to acquire the properties and methods of another class.
+**Inheritance** allows one class to acquire the attributes and methods of another class.
 
-Term        |	 Meaning
-Superclass  |	 Parent class
-Subclass    |    Child class
-extends	    |    Keyword used for class inheritance
-IS-A        |  	 Relationship between parent and child
+It promotes code reusability and establishes a relationship between classes.
 
-- Single Inheritance
+### Inheritance Terminology
 
- One child inherits from one parent.
+| Term | Meaning |
+|---|---|
+| Superclass | Parent class |
+| Subclass | Child class |
+| `extends` | Keyword used for class inheritance |
+| IS-A | Relationship between a parent and child class |
 
-- Multilevel Inheritance
+### Types of Inheritance in Java
 
- A chain of inheritance.
+**1. Single Inheritance**
 
-- Hierarchical Inheritance
+One child class inherits from one parent class.
 
- Multiple children inherit from the same parent.
+**2. Multilevel Inheritance**
 
-## Access modifiers in inheritance
+A chain of inheritance where a class inherits from another child class.
 
-Java has 4 access levels 
+**3. Hierarchical Inheritance**
 
-1. Private Accessible only inside the class where it is declared.
+Multiple child classes inherit from the same parent class.
 
-2. Public Accessible from anywhere, subject to normal Java visibility rules.
+> **Note:** Java does not support multiple inheritance through classes. However, a class can implement multiple interfaces.
 
-3. Protected Accessible inside the same package and through inheritance outside the package.
+### Access Modifiers in Inheritance
 
-4. Default Accessible inside the same package. No modifier is written.
+Java provides four access levels that control where class members can be accessed.
+
+| Modifier | Accessibility |
+|---|---|
+| `private` | Accessible only inside the class where it is declared. |
+| `public` | Accessible from anywhere, subject to normal Java visibility rules. |
+| `protected` | Accessible within the same package and through inheritance outside the package. |
+| `default` | Accessible only within the same package. No modifier is written. |
 
 ---
 
-### Polymorphism
+## 6. Polymorphism
 
-polymorphism has many forms.
+**Polymorphism** means "many forms."
 
-In Java, it allows the same method name or reference type to work with different implementations
-so theres
+In Java, polymorphism allows the same method name or reference type to work with different implementations.
+
+There are two main types:
 
 - Method Overloading
-
 - Method Overriding
 
+### 6.1 Method Overloading
 
+**Method overloading** happens when a class contains multiple methods with the same name but different parameter lists.
 
-### 1. Method Overloading
+The differences can be in:
+- Number of parameters.
+- Types of parameters.
+- Order of parameter types.
 
-method overloading is creating multiple methods with the same name but different parameters
+> **Code Reference:** See `part1.java` for examples of method overloading.
 
-> see Main.java
+### 6.2 Method Overriding
 
+**Method overriding** happens when a child class provides its own implementation of a method that is already defined in its parent class.
 
+The overridden method must follow Java's method signature and return-type compatibility rules.
 
-### 2. Method Overriding
+> **Code Reference:** See `part1.java` for examples of method overriding.
 
-Method overriding happens when a child class provides its own implementation of a method already defined in its parent class.
+### Polymorphic Referencing
 
-> see Main.java
+Polymorphic referencing allows a parent class reference to point to a child class object.
 
+For example, a parent reference can refer to an instance of one of its subclasses.
 
-
-
-### Polymorphic referencing
-
-You can call methods available through the reference, and the overridden instance method is called.
+When calling an overridden instance method through that reference, Java executes the implementation belonging to the actual object at runtime.
 
 ---
 
+## 7. Static Methods and Initialization Blocks
 
+### 7.1 Static Methods
 
-### Static Methods and Static Blocks
+A **static method** belongs to the class itself rather than to a specific object.
 
-### 1. Static methods 
+Important rules:
 
-the static methods belongs to the class and its not an object 
-
-- static methods can directly access static members
-
+- Static methods can directly access other static members.
 - They cannot directly access instance members.
+- They cannot use the `this` keyword because `this` refers to the current object.
+- They cannot use the `super` keyword because `super` refers to the parent-class portion of the current object.
+- They can be called using the class name without creating an object.
 
-- they cannot use ``` super```
+### 7.2 Static Initialization Block
 
-- they cannot use ``` this``` which refers to an object meanwhile static methods belong to the class itself
+A **static initialization block** is used to initialize static data.
 
+Important points:
 
-### 2. Static Initialization Block
+- It executes when the class is initialized.
+- It executes only once per class initialization.
+- It runs before the `main()` method when that class is initialized as part of starting the program.
 
-A static block initializes static data.
+### 7.3 Instance Initialization Block (IIB)
 
-The static block executes when the class is initialized, before the main method in this example.
+An **Instance Initialization Block (IIB)** is a block of code that executes whenever an object is created.
 
+Important points:
 
-### 3. Instance Initialization Block (IIB)
-
-
-An instance initialization block executes whenever an object is created.
-
-
+- It executes every time a new object is created.
+- It runs before the constructor body.
+- It is useful for sharing initialization code between constructors.
 
 ---
 
+## 8. Abstraction
 
-### Abstraction
+**Abstraction** means hiding unnecessary implementation details and showing only the essential functionality to the user.
 
-Abstraction means hiding unnecessary implementation details and showing only the essential functionality to the user.
+In Java, abstraction can be achieved using:
 
-- abstract class is created using ``abstract`` keyword.
+- Abstract Classes
+- Interfaces
 
+### Abstract Classes
 
-Important abstract class rules
-- Cannot create an object directly from it.
-- Can contain abstract methods.
-- Can contain normal methods.
-- Can contain constructors.
-- Can contain variables and fields.
-- A concrete child class must implement all inherited abstract methods.
+An abstract class is declared using the `abstract` keyword.
 
-### When should you use abstraction?
-According to your lecture:
-- When you cannot provide implementation for all methods in a base class.
+### Important Abstract Class Rules
+
+- You cannot create an object directly from an abstract class.
+- It can contain abstract methods (methods without an implementation).
+- It can contain normal methods with implementations.
+- It can contain constructors.
+- It can contain variables and fields.
+- A concrete child class must implement all inherited abstract methods unless it is also declared abstract.
+
+### When Should You Use Abstraction?
+
+According to the lecture:
+
+- When you cannot provide an implementation for all methods in a base class.
 - When you want child classes to provide their own implementations.
 - When you want to hide unnecessary implementation details.
 
+---
 
-### Interfaces
+## 9. Interfaces
 
-An interface is a contract that defines capabilities a class must provide.
+An **interface** is a contract that defines capabilities a class must provide.
 
+A class uses the `implements` keyword to implement an interface and provide implementations for its required abstract methods.
 
-Feature                 	Abstract Class      	            Interface
-Keyword                 	abstract class      	            interface
-Inheritance                 keyword	extends     	            implements
-Object creation            	Not directly possible           	Not directly possible
-Constructors            	Yes                              	No
-Normal methods          	Yes                               	Yes, using permitted method types
-Abstract methods        	Yes                 	            Yes
-Instance variables      	Yes                             	No; interface fields are constants
-Multiple inheritance    	A class extends only one class	    A class can implement multiple interfaces
+### Abstract Class vs. Interface
 
+| Feature | Abstract Class | Interface |
+|---|---|---|
+| Keyword | `abstract class` | `interface` |
+| Inheritance keyword | `extends` | `implements` |
+| Object creation | Cannot be instantiated directly | Cannot be instantiated directly |
+| Constructors | Yes | No |
+| Normal methods | Yes | Yes, using permitted method types |
+| Abstract methods | Yes | Yes |
+| Instance variables | Yes | No; fields are constants (`public static final`) |
+| Multiple inheritance | A class can extend only one class | A class can implement multiple interfaces |
+
+### Important Interface Notes
+
+- Interface methods are implicitly `public abstract` by default unless they are declared as permitted alternative method types.
+- Interface variables are implicitly `public static final`.
+- A class can implement multiple interfaces.
+- Interfaces support abstraction by defining what a class must do without necessarily defining how it does it.
+
+---
+
+## Quick Revision
+
+| Concept | Key Idea |
+|---|---|
+| Class | Blueprint for creating objects. |
+| Object | An instance of a class. |
+| Method | A block of code that performs an action. |
+| Constructor | Initializes an object when it is created. |
+| Inheritance | Allows a class to acquire members from another class. |
+| Overloading | Same method name, different parameters. |
+| Overriding | Child class provides a new implementation of a parent method. |
+| Polymorphism | One interface or reference, multiple forms of behavior. |
+| Static | Belongs to the class rather than an individual object. |
+| Abstraction | Hides implementation details and exposes essential functionality. |
+| Interface | A contract that defines what a class must implement. |
+
+---
+
+**Reference:** `part1.java` contains the practical code examples used to understand these OOP concepts.
