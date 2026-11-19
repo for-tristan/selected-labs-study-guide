@@ -237,36 +237,3 @@ public class part2 {
 
 
 
-class Animal { 
-    
-    public String sound() {
-        
-        return "Some sound";
-    
-    }
-
-}
-class Dog extends Animal {
-    
-    @Override public String sound() { 
-        
-        return "Bark"; 
-    
-    } }
-class Cat extends Animal {
-    
-    
-    
-    @Override public String sound() {
-        
-        return "Meow"; 
-    
-    } 
-}
-
-
- Animal[] animals = {
-
-new Dog(), new Cat(), new Animal()};
-
- }
